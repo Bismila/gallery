@@ -1,0 +1,80 @@
+﻿@model IEnumerable<Gallery.WEB.Models.UserViewModel>
+@{
+    ViewBag.Title = "Searched Users";
+}
+
+
+@using (Ajax.BeginForm("SearchedUsers", "Friends", new AjaxOptions { UpdateTargetId = "results-searchUsers" }))
+{
+
+    <div class="col-md-12">
+        <div class="user-info__imgs">
+            @if (Model != null)
+            {
+                var j = 0;
+                var countSearched = ViewBag.CountSearched;
+
+                foreach (var item in Model)
+                {
+                    var count = countSearched;
+                    if (item.Login == User.Identity.Name)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        <div class="imgs-block">
+                            <div class="hidden">@Html.DisplayFor(modelItem => item.Id)</div>
+                            <div class="hidden">
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </div>
+                            <div>
+                                @Html.DisplayFor(modelItem => item.Login)
+                            </div>
+
+                            <div class="imgs-block__img">
+                                <a href="#">
+
+                                    @if (!string.IsNullOrWhiteSpace(item.PhotoUser))
+                                    {
+                                        <img src=" @Html.DisplayFor(modelItem => item.PhotoUser)" />
+                                    }
+                                    else
+                                    {
+                                        <img class="gag" src="~/images/user-icon.png" />
+                                    }
+                                </a>
+                            </div>
+
+                            @if (j < count && item.Login == item.Friends[j].Users[j].Login)
+                            {
+                                if (j < count && item.Id == item.Friends[j].FriendId)
+                                {
+                                    <p>Is your friend...</p>
+                                    j++;
+                                }
+                            }
+                            else
+                            {
+                                <div class="linkAddFriend">
+                                    <div class="addedCurrentId hidden">@Html.DisplayFor(modelItem => item.Id)</div>
+                                    <a href="#">Add Friend</a>
+                                </div>
+                            }
+                        </div>
+                    }
+
+                }
+            }
+            @if (Model.Count() == 0)
+            {
+                <div class="noResult">
+                    No users with such login! Try again...
+                </div>
+            }
+        </div>
+
+    </div>
+}
+
+

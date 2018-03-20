@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Gallery.WEB.Models.ImageViewModel>
+
+@{
+    ViewBag.Title = "Home Page";
+}
+<h1 class="myLogin">@HttpContext.Current.User.Identity.Name <span class="myLogin-note">(It's me)</span></h1>
+<div class="user-info clearfix">
+    @Html.Partial("AllinfoCurrentUserPartial")
+
+    @Html.Partial("AllImagesCurrentUserPartial")
+</div>
+<div class="row">
+    <h3 class="txt-center">Friends images:</h3>
+    @Html.Partial("AllImagesFriendsPartial")
+</div>
+
+
+
+
+

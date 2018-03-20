@@ -1,0 +1,138 @@
+﻿@model Gallery.WEB.Models.EditUserViewModel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit User</h2>
+
+@using (Html.BeginForm("Edit", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-horizontal">
+        <hr />
+
+        <div class="divEditUser">
+            <div class="colEditUser">
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control divEditUser" } })
+            </div>
+        </div>
+
+
+
+        <div class="divEditUser">
+            <div class="colEditUser">
+                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control divEditUser" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @Html.HiddenFor(model => model.Id)
+        <div class="form-group hidden">
+            @Html.HiddenFor(model => model.Password)
+        </div>
+
+        @if (!User.IsInRole("admin"))
+        {
+            <div class="form-group hidden">
+                @Html.HiddenFor(model => model.Login)
+            </div>
+            <div class="form-group hidden">
+                @Html.HiddenFor(model => model.RoleId)
+            </div>
+            <div class="form-group hidden">
+                @Html.HiddenFor(model => model.OldLogin)
+            </div>
+            <div class="form-group hidden">
+                @Html.HiddenFor(model => model.Roles)
+            </div>
+        }
+
+        @if (User.IsInRole("admin"))
+        {
+            <div class="form-group hidden">
+                @Html.HiddenFor(model => model.OldLogin)
+            </div>
+            <div class="divEditUser">
+                <div class="colEditUser">
+                    @Html.LabelFor(model => model.Login, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "form-control divEditUser" } })
+                    @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
+                    @if (TempData["Message"] != null)
+                    {
+                        <div class="form-group col-md-10 text-danger">
+                            @TempData["Message"]
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="divEditUser">
+                <div class="colEditUser">
+                    @Html.LabelFor(model => model.NewPassword, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.NewPassword, new { htmlAttributes = new { @class = "form-control divEditUser" } })
+                    @Html.ValidationMessageFor(model => model.NewPassword, "", new { @class = "text-danger" })
+                    @if (TempData["PasswordMessage"] != null)
+                    {
+                        <div class="form-group col-md-10 text-danger">
+                            @TempData["PasswordMessage"]
+                        </div>
+                    }
+                </div>
+            </div>
+
+
+            <div class="colEditUser">
+                @Html.LabelFor(model => Model.Roles, htmlAttributes: new { @class = "control-label" })
+
+
+
+                <select name="UpdateUserRole" class=" form-group selectAdmin">
+                    @for (int i = 0; i < Model.Roles.Count; i++)
+                    {
+                        if (Model.RoleId == Model.Roles[i].Id)
+                        {
+                            <option selected>@Html.DisplayTextFor(model => model.Roles[i].Name)</option>
+                        }
+                        else
+                        {
+                            <option>@Html.DisplayTextFor(model => model.Roles[i].Name)</option>
+                        }
+                    }
+                </select>
+            </div>
+        }
+        <div class="form-group hidden">
+            @Html.HiddenFor(model => model.PhotoUser)
+        </div>
+        <div class="txt-center">
+
+            <div class="imgEditCurrentUser">
+                @if (!string.IsNullOrWhiteSpace(Model.PhotoUser))
+                {
+                    <img class="" src="@Html.DisplayFor(modelItem => modelItem.PhotoUser)" />
+                }
+                else
+                {
+                    <img class="gag" src="~/images/user-icon.png" />
+                }
+            </div>
+        </div>
+        <div class="form-group txt-center">
+            <input type="file" name="uploadImg" class="btn " id="uploadEditImgUser" />
+        </div>
+
+        <div class="form-group">
+            <div class="my-col">
+                <input type="submit" value="Save" class="rrr btn btn-default mySuccess" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to Home", "Index", "User")
+</div>

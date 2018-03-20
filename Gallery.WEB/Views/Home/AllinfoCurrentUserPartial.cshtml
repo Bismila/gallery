@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Gallery.WEB.Models.ImageViewModel>
+
+@{
+    ViewBag.Title = "Home Page";
+    ViewBag.PhotoUserUrlDefault = "/images/user-icon.png";
+}
+
+
+<div class="col-md-3 txt-center padding-null">
+    <div style=" font-size: 16px;
+                            font-family: monospace;
+                            font-weight: 900;">
+
+    </div>
+    <div class="imgCurrentUser">
+        @if (!string.IsNullOrWhiteSpace(ViewBag.PhotoUserUrl))
+        {
+            <img class="" src="@ViewBag.PhotoUserUrl" />
+        }
+        else
+        {
+            <img class="gag" src="@ViewBag.PhotoUserUrlDefault" />
+        }
+        <div class="shadow"></div>
+    </div>
+
+    <div>
+        @Html.ActionLink("Edit", "Edit", "User", new { id = ViewBag.CurrentUserId }, null) |
+        @Html.ActionLink("Delete", "DeleteAvatar", "User", new { id = ViewBag.CurrentUserId }, null)
+    </div>
+    <div>
+        @Html.ActionLink("Add new photo", "CreateImage", "Image", new { area = "" }, new { @class = "btn add-img btn-color__gray" })
+    </div>
+    <div>
+        @Html.ActionLink("All my photo", "Index", "Image", new { area = "" }, new { @class = "btn add-img btn-color__yellow" })
+    </div>
+    <div>
+        @Html.ActionLink("Search friends", "Index", "Friends", new { area = "" }, new { @class = "btn add-img btn-color__cadetblue" })
+    </div>
+
+    <div>
+        @Html.ActionLink("my Friends", "MyFriends", "Friends", new { area = "" }, new { @class = "btn add-img btn-color__darkcyan" })
+    </div>
+</div>
+
+
+
+
+

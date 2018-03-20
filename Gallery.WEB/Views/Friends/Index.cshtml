@@ -1,0 +1,126 @@
+﻿@model IEnumerable<Gallery.WEB.Models.UserViewModel>
+@{
+    ViewBag.Title = "All Users";
+}
+
+<h2 class="resultOfSearch">All users and friends</h2>
+
+<div class="row">
+    <div class="col-md-12 txt-center">
+        <form action="/Friends/Index"
+              data-ajax="true"
+              data-ajax-mode="replace"
+              data-ajax-update="#results-searchUsers"
+              id="search"
+              method="get">
+            <input id="searchLogin" type="text" class="inp-search" name="searchLogin" placeholder="Enter the name" />
+        </form>
+    </div>
+</div>
+
+
+
+@using (Ajax.BeginForm("Index", "Friends", new AjaxOptions { UpdateTargetId = "results-searchUsers" }))
+{
+
+    <div id="results-searchUsers" class="col-md-12">
+
+        <div class="user-info__imgs">
+            @if (Model != null)
+            {
+                var j = 0;
+
+                foreach (var item in Model)
+                {
+                    var count = item.Friends.Count();
+                    if (item.Login == User.Identity.Name)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        <div class="imgs-block">
+                            <div class="hidden">
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </div>
+                            <div>
+                                @Html.DisplayFor(modelItem => item.Login)
+                            </div>
+
+                            <div class="imgs-block__img">
+                                <a href="#">
+
+                                    @if (!string.IsNullOrWhiteSpace(item.PhotoUser))
+                                    {
+                                        <img src=" @Html.DisplayFor(modelItem => item.PhotoUser)" />
+                                    }
+                                    else
+                                    {
+                                        <img class="gag" src="~/images/user-icon.png" />
+                                    }
+                                </a>
+                            </div>
+                            @if(j < count && item.Id == item.Friends[j].FriendId)
+                            {
+                                <p>Is your friend...</p>
+                                j++;
+                            }
+                            else
+                            {
+                                <div class="linkAddFriend">
+                                    <div class="addedCurrentId hidden">@Html.DisplayFor(modelItem => item.Id)</div>
+                                    <a href="#">Add Friend</a>
+                                </div>
+                            }
+                          
+                         
+
+                        </div>
+                    }
+
+                }
+            }
+            @if (Model.Count() == 0)
+            {
+                <div class="noResult">
+                    No users with such login! Try again...
+                </div>
+            }
+        </div>
+
+    </div>
+}
+
+<script>
+        $(document).ready(function () {
+            $("#searchLogin").keyup(function (e) {
+
+                e.preventDefault();
+
+                var searchLogin = $("#searchLogin").val();
+                searchLogin = encodeURIComponent(searchLogin);
+                $('#results-searchUsers').load("http://localhost:39210/Friends/SearchedUsers?searchLogin=" + searchLogin);
+
+            });
+
+            $(".linkAddFriend a").click(function (event) {
+                event.preventDefault();
+                var value = "";
+                var addedCurrentId = parseInt($(this).siblings("div.addedCurrentId").text());
+                var html = $.ajax({
+                    url: "AddFriend",
+                    type: 'get',
+                    //dataType: 'json',
+                    data: { id: addedCurrentId },
+                    success: function (data) {
+                        value = data;
+                    },
+
+                }).responseText;
+
+                if(html != '')
+                    $(this).parent().html('<p>' + "Is your friend!" + '</p>');
+
+            });
+        });
+    </script>

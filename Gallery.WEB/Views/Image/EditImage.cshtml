@@ -1,0 +1,71 @@
+﻿@model Gallery.WEB.Models.ImageViewModel
+
+@{
+    ViewBag.Title = "EditImage";
+}
+
+<h2>EditImage</h2>
+@using (Ajax.BeginForm("EditImage", "Image", new AjaxOptions { HttpMethod = "POST" }, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>ImageViewModel</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.ImageDate, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.ImageDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ImageDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.PathImage, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-5">
+                <img src=" @Html.DisplayFor(model => model.PathImage)" style="width: 100%" />
+            </div>
+        </div>
+        <div class="form-group txt-center">
+                <input type="file" name="uploadImg" class="btn" id="uploadImg" />
+                @if (ViewBag.IsFile != null)
+                {
+                    <div class="form-group col-md-10 text-danger">
+                        <span class="col-md-2"></span>
+                        @ViewBag.IsFile
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="hidden">
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.Id, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-5">
+                    @Html.EditorFor(model => model.User.Id, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.UserId, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-5">
+                    @Html.EditorFor(model => model.UserId, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+        </div>
+        <div class="form-group txt-center">
+            <div class="col-md-offset-1 col-md-11">
+                <input type="submit" value="Save" class="btn btn-default mySuccess" />
+            </div>
+        </div>
+}
+<div>
+    @Html.ActionLink("Back to all photos", "Index")
+</div>

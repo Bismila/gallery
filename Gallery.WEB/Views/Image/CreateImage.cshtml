@@ -1,0 +1,54 @@
+﻿@model Gallery.WEB.Models.ImageViewModel
+
+@{
+    ViewBag.Title = "CreateImage";
+
+}
+
+<h2>CreateImage</h2>
+
+@using (Ajax.BeginForm("CreateImage", "Image", new AjaxOptions { HttpMethod = "POST" }, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="my-col">
+        <input type="text" name="Name" class="form-control myControl" placeholder="Name image"/>
+        @if (ViewBag.IsNotFill != null)
+        {
+            <div class="form-group text-danger  txt-center">
+                <span>@ViewBag.IsNotFill</span>
+            </div>
+        }
+    </div>
+    <div class="my-col hidden">
+        <label>Image Date</label><br />
+        <input type="text" readonly name="ImageDate" class="form-control" value="@DateTime.Now" />
+    </div>
+    <div class="my-col txt-center">
+        <input type="file" name="uploadImg" class="btn" id="uploadImg" />
+        @if (ViewBag.IsFile != null)
+        {
+            <div class="form-group text-danger  txt-center">
+                <span>@ViewBag.IsFile</span>
+            </div>
+        }
+        @if (ViewBag.IsCurrentUrl != null)
+        {
+            <div style="width:150px; height:auto; overflow:hidden; margin: 15px 0 15px 0">
+                <img src="@Url.Content(ViewBag.IsCurrentUrl)" style="width: 100%" />
+            </div>
+        }
+    </div>
+    <br />
+    <div></div>
+    <div class="my-col">
+        <input type="submit" value="Create" class="btn btn-default btn-width mySuccess" />
+    </div>
+}
+
+
+<div>
+    @Html.ActionLink("Back to Home", "Index", "Home")
+</div>
+
+
+

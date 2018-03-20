@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Gallery.WEB.Models.ImageViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>All my images</h2>
+
+
+<div class="col-md-12">
+    <div class="halfWidthAndCenter">
+        @Html.ActionLink("Add new photo", "CreateImage", "Image", new { area = "" }, new { @class = "btn add-img btn-color__gray" })
+    </div>
+    <div class="user-info__imgs">
+        @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+
+                <div class="imgs-block">
+                    <div class="hidden">@Html.DisplayFor(modelItem => item.Id)</div>
+                    <div class="hidden">@Html.DisplayFor(modelItem => item.UserId)</div>
+                    <div class="hidden">@Html.DisplayFor(modelItem => item.Name)</div>
+                    <div class="imgs-block__img">
+                        <img src=" @Html.DisplayFor(modelItem => item.PathImage)" />
+                    </div>
+                    <div>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </div>
+                    <div  class="hidden">
+                        @Html.DisplayFor(modelItem => item.UserId)
+                    </div>
+                    <div>
+                        @Html.ActionLink("Edit", "EditImage", "Image", new { id = item.Id }, null) |
+                        @Html.ActionLink("Delete", "DeleteImage", "Image", new { id = item.Id }, null)
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+</div>
+

@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Gallery.WEB.Models.ImageViewModel>
+@{
+    ViewBag.Title = "Home Page";
+}
+<div class="col-md-12">
+    <div class="user-info__imgs">
+        @if (Model != null)
+        {
+            var count1 = 0;
+            foreach (var item in Model)
+            {
+                count1++;
+                int index = 0;
+                if (string.IsNullOrEmpty(item.UserName))
+                {
+                    <a href="@Url.Action("PageMyFriend", "Friends", new { id = item.UserId }, null)">
+                        <div class="imgs-block">
+                            <div class="hidden">@Html.DisplayFor(modelItem => item.Id)</div>
+                            <div class="hidden">@Html.DisplayFor(modelItem => item.ImageDate)</div>
+                            <div class="hidden">@Html.DisplayFor(modelItem => item.UserId)</div>
+
+                            <div class="imgs-block__img">
+                                <img src=" @Html.DisplayFor(modelItem => item.PathImage)" />
+                            </div>
+                            <div class="photo-name">
+                                <span class="countLikes-js countLikes">@item.CountLikes</span>
+                                @if (item.isLike == true)
+                                {
+                                    <span class="like-js like active" data-preview-index="@index"></span>
+                                }
+                                else
+                                {
+                                    <span class="like-js like" data-preview-index="@index"></span>
+                                }
+                                @{
+                                    index++;
+                                }
+                                <span class="photo-name__preview">@Html.DisplayFor(modelItem => item.Name)</span>
+
+                            </div>
+                            <div>
+                                @Html.DisplayFor(modelItem => item.User.Login)
+                            </div>
+                        </div>
+                    </a>
+                }
+            }
+        }
+    </div>
+</div>
+
+
+
+
+
+
+
+

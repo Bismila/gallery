@@ -1,0 +1,115 @@
+﻿@model IEnumerable<Gallery.WEB.Models.UserViewModel>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>All Users:</h2>
+
+
+<table class="table">
+    <tr>
+        <th class="hidden">
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th class="hidden">
+            @Html.DisplayNameFor(model => model.Password)
+        </th>
+        <th class="hidden">
+            @Html.DisplayNameFor(model => model.RoleId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Login)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            <b>Role</b>
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PhotoUser)
+        </th>
+        <th></th>
+    </tr>
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td class="hidden">
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td class="hidden">
+                    @Html.DisplayFor(modelItem => item.Password)
+                </td>
+                <td class="hidden">
+                    @Html.DisplayFor(modelItem => item.RoleId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Login)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                @{string roleName = ""; }
+                <td class="hidden">
+                    <select>
+                        @for (int i = 0; i < item.Roles.Count; i++)
+                        {
+                            if (item.RoleId == item.Roles[i].Id)
+                            {
+                                <option selected>@item.Roles[i].Name</option>
+                                roleName = @item.Roles[i].Name;
+                            }
+                            else
+                            {
+                                <option>@item.Roles[i].Name</option>
+
+                            }
+                        }
+                    </select>
+
+                </td>
+                <td>
+                    @roleName
+                </td>
+                <td style=" max-width: 200px;">
+                    <div class="img-photoUser">
+                        @if (!string.IsNullOrWhiteSpace(item.PhotoUser))
+                        {
+                            <img class="editImg-user" src="@Html.DisplayFor(modelItem => item.PhotoUser)" />
+                        }
+                        else
+                        {
+                            <img class="editImg-user" src="~/images/user-icon.png" />
+                        }
+                    </div>
+                </td>
+
+
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) <br />
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) <br />
+                    @if (roleName == "admin")
+                    {
+                        @Html.Hidden("Delete", "Delete", new { id = item.Id })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    }
+
+                </td>
+            </tr>
+        }
+    }
+
+</table>
+
+

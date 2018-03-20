@@ -1,0 +1,142 @@
+﻿@model  Gallery.WEB.Models.UserViewModel
+@{
+    ViewBag.Title = "Page My Friend";
+    ViewBag.PhotoUserUrlDefault = "/images/user-icon.png";
+
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="header-friend">
+            <div class="img-friend__main">
+                @if (!string.IsNullOrWhiteSpace(@Model.PhotoUser))
+                {
+                    <img src="@Model.PhotoUser" alt="@Model.Login" />
+                }
+                else
+                {
+                    <img src="@ViewBag.PhotoUserUrlDefault" alt="@Model.Login"  class="gag"/>
+                }
+
+            </div>
+            <h2 class="img-friend__name"> Your friend - <span>@Model.Login</span></h2>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    @if (Model.Images.Count > 0)
+    {
+        <div class="img-preview">
+            @for (int i = 0; i < Model.Images.Count; i++)
+            {
+                <div class="col-md-3">
+                    <div class="img-friendBlockGeneral">
+                        <div class="img-friendBlock">
+                            <a href="#" data-slide-index="@i" class="link-preview__friends">
+                                <div class="img-friendBlock__img">
+                                    <img src="@Url.Content(Model.Images[i].PathImage)" />
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="img-friendBlock__name">
+                            <div class="photo-name ">
+                                <span class="countLikes-js countLikes lightFont">@Model.Images[i].CountLikes</span>
+                                @if (Model.Images[i].isLike == true)
+                                {
+                                    <span class="like-js like active" data-preview-index="@i"></span>
+                                }
+                                else
+                                {
+                                    <span class="like-js like" data-preview-index="@i"></span>
+                                }
+                                <span class="photo-name__preview lightFont">@Model.Images[i].Name</span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="show-slider">
+            <h2 class="closeSlider">X</h2>
+            <div id="friendsSlider">
+
+                @for (int i = 0; i < Model.Images.Count; i++)
+                {
+
+                    <div class=" img-slide">
+                        <div class="hidden">@Html.DisplayFor(modelItem => Model.Images[i].Id)</div>
+                        <div class="hidden">@Html.DisplayFor(modelItem => Model.Images[i].User.Id)</div>
+
+                        <div class="imgs-slide__img">
+                            <img src=" @Html.DisplayFor(modelItem => Model.Images[i].PathImage)" />
+                        </div>
+                        <div class="photo-name">
+                            <a href="@Url.Action("CountLikes", "Image", new { id = Model.Images[i].Id }, null)" id="@Model.Images[i].Id">
+                                <span class="countLikes-js countLikes font-count">@Model.Images[i].CountLikes</span>
+
+                                @if (Model.Images[i].isLike == true)
+                                {
+                                    <span class="like-js like active"></span>
+                                }
+                                else
+                                {
+                                    <span class="like-js like"></span>
+                                }
+
+                            </a>
+                            <span class="photo-name__title">@Html.DisplayFor(modelItem => Model.Images[i].Name)</span>
+
+                        </div>
+                    </div>
+                }
+                }
+            </div>
+        </div>
+
+    }
+    else
+    {
+        <div class="notPhoto">
+            <p>No photos yet...</p>
+        </div>
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        var numberCurrentSlide;
+        var countSlidesFr;
+
+        var friendsSlider = $('#friendsSlider').bxSlider({
+            mode: 'fade',
+        });
+
+        $('.bx-wrapper').width('100%');
+        countSlidesFr = friendsSlider.getSlideCount();
+
+        $('.link-preview__friends').click(function (e) {
+            e.preventDefault();
+            numberCurrentSlide = $(this).data("slide-index");
+            friendsSlider.goToSlide(numberCurrentSlide);
+            $('.show-slider').addClass('active');
+        });
+
+        $('.closeSlider').click(function (e) {
+            e.preventDefault();
+            $('.show-slider').removeClass('active');
+        });
+
+
+
+        clickLikeCurrentUserForFriendsPage(friendsSlider, countSlidesFr);
+    });
+</script>
+
+
+
+
+

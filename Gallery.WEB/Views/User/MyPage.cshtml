@@ -1,0 +1,47 @@
+﻿@model Gallery.WEB.Models.UserViewModel
+@{
+    ViewBag.Title = "DetailsCurrentUser";
+}
+
+<h2>MyPage</h2>
+<div>
+    <h4>@Html.DisplayFor(model => model.Login)</h4>
+    <hr />
+    <div class="dl-horizontal">
+        <div>
+            <b class="space">@Html.DisplayNameFor(model => model.Name)</b>
+            @Html.DisplayFor(model => model.Name)
+        </div>
+
+        <div>
+            <b class="space">@Html.DisplayNameFor(model => model.Login)</b>
+            @Html.DisplayFor(model => model.Login)
+        </div>
+
+        <div>
+            <b class="space">@Html.DisplayNameFor(model => model.Email)</b>
+            @Html.DisplayFor(model => model.Email)
+        </div>
+
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="">
+        @if (!string.IsNullOrWhiteSpace(Model.PhotoUser))
+        {
+            <img class="" src="@Html.DisplayFor(modelItem => modelItem.PhotoUser)" />
+        }
+        else
+        {
+            <img class="gag" src="~/images/user-icon.png" />
+        }
+    </div>
+</div>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to Home", "Index", "Home")
+</p>
+
+
