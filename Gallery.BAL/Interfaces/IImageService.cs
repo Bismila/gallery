@@ -8,6 +8,8 @@ namespace Gallery.BAL.Interfaces
     {
         bool IsUniqName(string albumName);
 
+        bool IsExistsFile(string fileName, long userId);
+
         IEnumerable<CreateUpdateImageDto> GetAllElementsFromUser(long userId);
 
         IEnumerable<CreateUpdateImageDto> GetAllElementsFromFriendsAndUser(long userId);

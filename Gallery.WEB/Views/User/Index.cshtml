@@ -83,7 +83,8 @@
                     <div class="img-photoUser">
                         @if (!string.IsNullOrWhiteSpace(item.PhotoUser))
                         {
-                            <img class="editImg-user" src="@Html.DisplayFor(modelItem => item.PhotoUser)" />
+                            @*<img class="editImg-user" src="@Html.DisplayFor(modelItem => item.PhotoUser)" />*@
+                            <img class="editImg-user" src='@Url.Content(item.PhotoUser)' />
                         }
                         else
                         {

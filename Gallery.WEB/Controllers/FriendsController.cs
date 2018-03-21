@@ -50,7 +50,6 @@ namespace Gallery.WEB.Controllers
         public ActionResult SearchedFriends(string searchLoginFriend)
         {
             var currentUserName = User.Identity.Name;
-            var currentUs = userService.GetCurrentUser(currentUserName);
             var users = userService.SearchFriends(searchLoginFriend);
           
             return PartialView(users.Select(x => new UserViewModel
@@ -67,7 +66,6 @@ namespace Gallery.WEB.Controllers
         public ActionResult SearchedUsers(string searchLogin)
         {
             var currentUserName = User.Identity.Name;
-            var currentUs = userService.GetCurrentUser(currentUserName);
             var users = userService.SearchUsers(searchLogin);
 
             return PartialView(users.Select(x => new UserViewModel

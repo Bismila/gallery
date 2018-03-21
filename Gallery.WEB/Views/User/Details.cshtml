@@ -34,17 +34,17 @@
         <div class="hidden">
             <select>
                 @for (int i = 0; i < Model.Roles.Count; i++)
-            {
-                if (Model.RoleId == Model.Roles[i].Id)
                 {
-                    <option selected>@Model.Roles[i].Name</option>
-                roleName = @Model.Roles[i].Name;
-            }
-            else
-            {
-                <option>@Model.Roles[i].Name</option>
-        }
-    }
+                    if (Model.RoleId == Model.Roles[i].Id)
+                    {
+                        <option selected>@Model.Roles[i].Name</option>
+                        roleName = @Model.Roles[i].Name;
+                    }
+                    else
+                    {
+                        <option>@Model.Roles[i].Name</option>
+                    }
+                }
             </select>
         </div>
         <div>
@@ -58,7 +58,8 @@
     <div class="">
         @if (!string.IsNullOrWhiteSpace(Model.PhotoUser))
         {
-            <img class="" src="@Html.DisplayFor(modelItem => modelItem.PhotoUser)" />
+            @*<img class="" src="@Html.DisplayFor(modelItem => modelItem.PhotoUser)" />*@
+            <img class="" src='@Url.Content(Model.PhotoUser)' />
         }
         else
         {

@@ -5,7 +5,7 @@
 }
 
 <h2>MyFriends</h2>
- 
+
 <div class="row">
     <div class="col-md-12 txt-center">
         <form action="/Friends/MyFriends"
@@ -20,52 +20,53 @@
     </div>
 </div>
 <div class="user-info">
- 
+
 </div>
 <div id="results-searchFriendForm" class="col-md-12">
     <div class="user-info__imgs">
-    @using (Ajax.BeginForm("MyFriends", "Friends", new AjaxOptions { UpdateTargetId = "results-searchFriendForm" }))
-    {
-        if (Model != null)
+        @using (Ajax.BeginForm("MyFriends", "Friends", new AjaxOptions { UpdateTargetId = "results-searchFriendForm" }))
         {
-            foreach (var item in Model)
+            if (Model != null)
             {
-                if (item.Login == User.Identity.Name)
+                foreach (var item in Model)
                 {
-                    continue;
-                }
-                else
-                {
-                    <div class="imgs-block">
-                        <div class="hidden">@Html.DisplayFor(modelItem => item.Id)</div>
-                        <div class="hidden">
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </div>
-                        <div>
-                            @Html.DisplayFor(modelItem => item.Login)
-                        </div>
-                        <div class="imgs-block__img">
-                            <a href="@Url.Action("PageMyFriend", "Friends", new { id = item.Id }, null)">
+                    if (item.Login == User.Identity.Name)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        <div class="imgs-block">
+                            <div class="hidden">@Html.DisplayFor(modelItem => item.Id)</div>
+                            <div class="hidden">
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </div>
+                            <div>
+                                @Html.DisplayFor(modelItem => item.Login)
+                            </div>
+                            <div class="imgs-block__img">
+                                <a href="@Url.Action("PageMyFriend", "Friends", new { id = item.Id }, null)">
 
-                                @if (!string.IsNullOrWhiteSpace(item.PhotoUser))
-                                {
-                                    <img src=" @Html.DisplayFor(modelItem => item.PhotoUser)" />
-                                }
-                                else
-                                {
-                                    <img class="gag" src="~/images/user-icon.png" />
-                                }
-                            </a>
+                                    @if (!string.IsNullOrWhiteSpace(item.PhotoUser))
+                                    {
+                                        @*<img src=" @Html.DisplayFor(modelItem => item.PhotoUser)" />*@
+                                        <img src='@Url.Content(item.PhotoUser)' />
+                                    }
+                                    else
+                                    {
+                                        <img class="gag" src="~/images/user-icon.png" />
+                                    }
+                                </a>
+                            </div>
+                            @Html.ActionLink("Delete from Friends", "DelFriend", "Friends", new { id = item.Id }, null)
                         </div>
-                        @Html.ActionLink("Delete from Friends", "DelFriend", "Friends", new { id = item.Id }, null)
-                    </div>
+                    }
                 }
             }
         }
-    }
     </div>
 </div>
-<div >
+<div>
 
 </div>
 

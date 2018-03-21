@@ -25,8 +25,10 @@
 
                             <div class="imgs-block__img">
                                 <a href="#" data-slide-index="@index" class="link-preview">
-                                    <img src=" @Html.DisplayFor(modelItem => item.PathImage)" />
-                                    @*<img  src='@Url.Content(VirtualPath.(item.PathImage))'/>*@
+                                    @*comment part  <img src='@Url.Content(item.PathImage)' /> if change
+                                        upload file on Azure Storage   @*
+                                        @*<img src=" @Html.DisplayFor(modelItem => item.PathImage)" />*@
+                                    <img src='@Url.Content(item.PathImage)' />
                                 </a>
                             </div>
                             <div class="photo-name">
@@ -193,18 +195,19 @@
                                     </div>
                                 </div>
                                 <div class="imgs-blockImg">
-                                    <img src=" @Html.DisplayFor(modelItem => item.PathImage)" />
+                                    @*<img src=" @Html.DisplayFor(modelItem => item.PathImage)" />*@
+                                    <img src='@Url.Content(item.PathImage)' />
                                     <div class="photo-name">
                                         <a href="@Url.Action("CountLikes", "Image", new { id = item.Id }, null)" id="@item.Id">
                                             <span class="countLikes-js countLikes">@item.CountLikes</span>
                                             @if (item.isLike == true)
-                                            {
-                                                <span class="like-js like active"></span>
-                                            }
-                                            else
-                                            {
-                                                <span class="like-js like"></span>
-                                            }
+            {
+                                <span class="like-js like active"></span>
+}
+else
+{
+                                <span class="like-js like"></span>
+}
 
                                         </a>
                                         <span class="photo-name__title">@Html.DisplayFor(modelItem => item.Name)</span>

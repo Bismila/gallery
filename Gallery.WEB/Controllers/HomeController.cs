@@ -4,6 +4,7 @@ using Gallery.BAL.Interfaces;
 using Gallery.WEB.Models;
 using System.Linq;
 using System.Web.Mvc;
+using System;
 
 namespace Gallery.WEB.Controllers
 {
@@ -39,7 +40,7 @@ namespace Gallery.WEB.Controllers
         {
             //get all images into home page
             UserDTO currentUser = new UserDTO();
-            //var countLikesForImg = 
+       
             if (User.Identity.IsAuthenticated)
             {
                 var s = User.Identity.Name;
@@ -50,8 +51,7 @@ namespace Gallery.WEB.Controllers
                 var allImagesOrderByDate = allImage;
                 ViewBag.PhotoUserUrl = currentUser.PhotoUser;
                 ViewBag.CurrentUserId = currentUser.Id;
-                //TempData["currentUser"] = currentUser;
-
+           
                 if (allImage.Count() == 0)
                 {
                     ViewBag.isEmpty = "null";
@@ -95,25 +95,6 @@ namespace Gallery.WEB.Controllers
             ViewBag.Message = "Your contact page.";
             return View();
         }
-
-        //[HttpGet, ActionName("AddComment")]
-        //public JsonResult AddComment(int imgId, string textComment)
-        //{
-        //    var currUser = userService.GetCurrentUser(User.Identity.Name);
-        //    if (!string.IsNullOrWhiteSpace(textComment))
-        //    {
-        //        commentService.AddComment((long)imgId, textComment, currUser);
-        //        var comm = commentService.Get(imgId);
-
-        //        var result = new { Id = comm.Id, Comments = comm, UserWriter = currUser };
-        //        //return this.Jsonp(result);
-
-        //        return Json(comm, JsonRequestBehavior.AllowGet);
-        //    }
-        //    var str = "Your comments is empty!";
-        //    return Json(str, JsonRequestBehavior.AllowGet);
-
-        //}
 
     }
 }

@@ -11,20 +11,31 @@ namespace Gallery.BAL.Services
 {
     public class LocalFileService : IFileService
     {
+        //delete this method if fileUpload change from local to azure storage
+       
         public string UploadFile(Stream stream, string fileName, long userId)
         {
             string path = null;
             if (stream.Length != 0)
             {
-                //string currentPath = Directory.GetCurrentDirectory();
-                //if (!Directory.Exists(Path.Combine(currentPath, userId.ToString())))
-                //    Directory.CreateDirectory(Path.Combine(currentPath, userId.ToString()));
-                path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, 
-                                        @"images\"+ Directory.CreateDirectory(userId.ToString()),
-                                        fileName);
-                //path = Path.Combine("images", fileName);
+                path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                       @"images\" + Directory.CreateDirectory(userId.ToString()));
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(Path.Combine(path));
+                    path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                     @"images\" + Directory.CreateDirectory(userId.ToString()),
+                                     fileName);
+                }
+                else
+                {
+                    path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                    @"images\" + Directory.CreateDirectory(userId.ToString()),
+                                    fileName);
+                }
+                    
             }
-            using (FileStream fileStream = File.Create(path, (int)stream.Length))// new FileStream(path, FileMode.Append, FileAccess.Write))// File.Create(fileName, (int)stream.Length)))
+            using (FileStream fileStream = File.Create(path, (int)stream.Length))
             {
                 byte[] data = new byte[stream.Length];
                 MemoryStream ms = new MemoryStream(data);
@@ -33,18 +44,31 @@ namespace Gallery.BAL.Services
                 ms.CopyTo(fileStream);
             }
 
-
             return path;
         }
 
         public void DeleteAllFile(long userId)
         {
-            throw new NotImplementedException();
+           var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                      @"images\" + Directory.CreateDirectory(userId.ToString()));
+            string[] files = Directory.GetFiles(path);
+            
+            foreach (string file in files)
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+                File.Delete(file);
+            }
+
+
+            Directory.Delete(path, false);
         }
 
         public void DeleteFile(string filePath, long userId)
         {
-            throw new NotImplementedException();
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
         }
 
        

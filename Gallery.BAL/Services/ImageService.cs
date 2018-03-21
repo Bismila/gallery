@@ -3,7 +3,9 @@ using Gallery.BAL.DTO.ImagesDto;
 using Gallery.BAL.Interfaces;
 using Gallery.DAL.IRepository;
 using Gallery.DAL.Models;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Gallery.BAL.Services
@@ -28,7 +30,17 @@ namespace Gallery.BAL.Services
             likeRepository = _likeRepository;
             commentRepository = _commentRepository;
         }
-
+        public bool IsExistsFile(string fileName, long userId)
+        {
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                    @"images\" + Directory.CreateDirectory(userId.ToString()),
+                                    fileName);
+            if (File.Exists(path))
+            {
+                return false;
+            }
+            return true;
+        }
         public void Create(CreateUpdateImageDto element)
         {
             var currentUser = userRepository.GetCurrentUser(element.UserName);

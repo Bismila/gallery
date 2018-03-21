@@ -52,7 +52,8 @@
 
                                     @if (!string.IsNullOrWhiteSpace(item.PhotoUser))
                                     {
-                                        <img src=" @Html.DisplayFor(modelItem => item.PhotoUser)" />
+                                        @*<img src=" @Html.DisplayFor(modelItem => item.PhotoUser)" />*@
+                                        <img src="@Url.Content(item.PhotoUser)" />
                                     }
                                     else
                                     {
@@ -60,7 +61,7 @@
                                     }
                                 </a>
                             </div>
-                            @if(j < count && item.Id == item.Friends[j].FriendId)
+                            @if (j < count && item.Id == item.Friends[j].FriendId)
                             {
                                 <p>Is your friend...</p>
                                 j++;
@@ -72,8 +73,8 @@
                                     <a href="#">Add Friend</a>
                                 </div>
                             }
-                          
-                         
+
+
 
                         </div>
                     }
@@ -92,35 +93,35 @@
 }
 
 <script>
-        $(document).ready(function () {
-            $("#searchLogin").keyup(function (e) {
+    $(document).ready(function () {
+        $("#searchLogin").keyup(function (e) {
 
-                e.preventDefault();
+            e.preventDefault();
 
-                var searchLogin = $("#searchLogin").val();
-                searchLogin = encodeURIComponent(searchLogin);
-                $('#results-searchUsers').load("http://localhost:39210/Friends/SearchedUsers?searchLogin=" + searchLogin);
+            var searchLogin = $("#searchLogin").val();
+            searchLogin = encodeURIComponent(searchLogin);
+            $('#results-searchUsers').load("http://localhost:39210/Friends/SearchedUsers?searchLogin=" + searchLogin);
 
-            });
-
-            $(".linkAddFriend a").click(function (event) {
-                event.preventDefault();
-                var value = "";
-                var addedCurrentId = parseInt($(this).siblings("div.addedCurrentId").text());
-                var html = $.ajax({
-                    url: "AddFriend",
-                    type: 'get',
-                    //dataType: 'json',
-                    data: { id: addedCurrentId },
-                    success: function (data) {
-                        value = data;
-                    },
-
-                }).responseText;
-
-                if(html != '')
-                    $(this).parent().html('<p>' + "Is your friend!" + '</p>');
-
-            });
         });
-    </script>
+
+        $(".linkAddFriend a").click(function (event) {
+            event.preventDefault();
+            var value = "";
+            var addedCurrentId = parseInt($(this).siblings("div.addedCurrentId").text());
+            var html = $.ajax({
+                url: "AddFriend",
+                type: 'get',
+                //dataType: 'json',
+                data: { id: addedCurrentId },
+                success: function (data) {
+                    value = data;
+                },
+
+            }).responseText;
+
+            if (html != '')
+                $(this).parent().html('<p>' + "Is your friend!" + '</p>');
+
+        });
+    });
+</script>

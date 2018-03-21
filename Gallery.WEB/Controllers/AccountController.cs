@@ -8,6 +8,7 @@ using Gallery.BAL.Encryption;
 using System.Security.Cryptography;
 using Gallery.BAL.Providers;
 using System.Web;
+using System;
 
 namespace Gallery.WEB.Controllers
 {
@@ -101,7 +102,7 @@ namespace Gallery.WEB.Controllers
             if (ModelState.IsValid)
             {
 
-                var login = userService.GetAllElements().FirstOrDefault(log => log.Login == "Lisa");
+                var login = userService.GetAllElements().FirstOrDefault(log => log.Login == user.Login);
                 if (login != null)
                 {
                     ViewBag.Message = "This login is used";
@@ -128,7 +129,8 @@ namespace Gallery.WEB.Controllers
                     var userWithId = userService.GetCurrentUser(us.Login); 
                     if (!string.IsNullOrWhiteSpace(file.FileName))
                     {
-                        user.PhotoUser = fileService.UploadFile(file.InputStream, file.FileName, userWithId.Id);
+                        user.PhotoUser = @"~\" + fileService.UploadFile(file.InputStream, file.FileName, userWithId.Id)
+                                                             .Replace(HttpContext.Request.PhysicalApplicationPath, String.Empty);
                         us.Id = userWithId.Id;
                         us.PhotoUser = user.PhotoUser;
                         userService.Update(us);
