@@ -97,6 +97,11 @@ namespace Gallery.WEB.Controllers
                 ViewBag.IsFile = "Choose file!";
                 return View("CreateImage");
             }
+            if (!imageService.IsExistsFile(file.FileName, currentUser.Id))
+            {
+                ViewBag.IsFile = "Such file already exists!!";
+                return View("CreateImage");
+            }
             if (string.IsNullOrWhiteSpace(image.Name))
             {
                 ViewBag.IsNotFill = "Enter the name for new image!";
@@ -107,9 +112,11 @@ namespace Gallery.WEB.Controllers
                 ViewBag.IsNotFill = "Such name already exists!!";
                 return View("CreateImage");
             }
+         
             else
             {
-                //var path = Server.MapPath("~/images/" + file.FileName);
+                //comment part  .Replace(HttpContext.Request.PhysicalApplicationPath, String.Empty); if change
+                //upload file on Azure Storage
                 image.PathImage = @"~\" + fileService.UploadFile(file.InputStream, file.FileName, currentUser.Id)
                                             .Replace(HttpContext.Request.PhysicalApplicationPath, String.Empty);
             if (string.IsNullOrWhiteSpace(image.PathImage))
@@ -137,10 +144,10 @@ namespace Gallery.WEB.Controllers
         [HttpGet, ActionName("DeleteImage")]
         public ActionResult DeleteImage(int id)
         {
-            var path = imageService.Get(id);
+            var currentImg = imageService.Get(id);
             var currentUser = userService.GetCurrentUser(User.Identity.Name);
             imageService.Delete(id);
-            fileService.DeleteFile(path.PathImage, currentUser.Id);
+            fileService.DeleteFile(System.Web.HttpContext.Current.Server.MapPath(currentImg.PathImage), currentUser.Id);
             return RedirectToAction("Index", "Home");
         }
 
@@ -200,9 +207,10 @@ namespace Gallery.WEB.Controllers
                 }
                 else
                 {
-                    fileService.DeleteFile(imageOld.PathImage, currentUser.Id);
+                    fileService.DeleteFile(System.Web.HttpContext.Current.Server.MapPath(imageOld.PathImage), currentUser.Id);
 
-                    elem.PathImage = fileService.UploadFile(file.InputStream, file.FileName, currentUser.Id);
+                    elem.PathImage = @"~\" + fileService.UploadFile(file.InputStream, file.FileName, currentUser.Id)
+                                                    .Replace(HttpContext.Request.PhysicalApplicationPath, String.Empty);
                     imageService.Update(new CreateUpdateImageDto
                     {
                         Id = elem.Id,

@@ -37,7 +37,8 @@
 
                                     @if (!string.IsNullOrWhiteSpace(item.PhotoUser))
                                     {
-                                        <img src=" @Html.DisplayFor(modelItem => item.PhotoUser)" />
+                                        @*<img src=" @Html.DisplayFor(modelItem => item.PhotoUser)" />*@
+                                        <img src='@Url.Content(item.PhotoUser)' />
                                     }
                                     else
                                     {

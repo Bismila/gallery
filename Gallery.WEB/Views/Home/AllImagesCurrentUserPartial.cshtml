@@ -25,8 +25,10 @@
 
                             <div class="imgs-block__img">
                                 <a href="#" data-slide-index="@index" class="link-preview">
-                                    @*<img src=" @Html.DisplayFor(modelItem => item.PathImage)" />*@
-                                    <img  src='@Url.Content(item.PathImage)'/>
+                                    @*comment part  <img src='@Url.Content(item.PathImage)' /> if change
+                                        upload file on Azure Storage   @*
+                                        @*<img src=" @Html.DisplayFor(modelItem => item.PathImage)" />*@
+                                    <img src='@Url.Content(item.PathImage)' />
                                 </a>
                             </div>
                             <div class="photo-name">

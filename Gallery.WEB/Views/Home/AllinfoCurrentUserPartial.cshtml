@@ -15,7 +15,10 @@
     <div class="imgCurrentUser">
         @if (!string.IsNullOrWhiteSpace(ViewBag.PhotoUserUrl))
         {
-            <img class="" src="@ViewBag.PhotoUserUrl" />
+            @*<img class="" src="@ViewBag.PhotoUserUrl" /> if change
+            upload file on Azure Storage   @*
+            @*<img src=" @Html.DisplayFor(modelItem => item.PathImage)" />*@
+            <img src='@Url.Content(ViewBag.PhotoUserUrl)' />
         }
         else
         {

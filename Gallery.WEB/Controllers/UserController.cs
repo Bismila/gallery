@@ -3,6 +3,7 @@ using Gallery.BAL.Encryption;
 using Gallery.BAL.Interfaces;
 using Gallery.DAL.Models;
 using Gallery.WEB.Models;
+using System;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
@@ -233,9 +234,10 @@ namespace Gallery.WEB.Controllers
                 {
                     if (user.Name == userOld.Name && !string.IsNullOrWhiteSpace(userOld.PhotoUser))
                     {
-                        fileService.DeleteFile(userOld.PhotoUser, user.Id);
+                        fileService.DeleteFile(System.Web.HttpContext.Current.Server.MapPath(userOld.PhotoUser), user.Id);
                     }
-                    photo = fileService.UploadFile(file.InputStream, file.FileName, user.Id);
+                    photo = @"~\" + fileService.UploadFile(file.InputStream, file.FileName, user.Id)
+                                                    .Replace(HttpContext.Request.PhysicalApplicationPath, String.Empty);
                 }
 
                 if (file != null && string.IsNullOrWhiteSpace(file.FileName))
@@ -263,9 +265,10 @@ namespace Gallery.WEB.Controllers
                 {
                     if (user.Name == userOld.Name && !string.IsNullOrWhiteSpace(userOld.PhotoUser))
                     {
-                        fileService.DeleteFile(userOld.PhotoUser, currentUser.Id);
+                        fileService.DeleteFile(System.Web.HttpContext.Current.Server.MapPath(userOld.PhotoUser), currentUser.Id);
                     }
-                    user.PhotoUser = fileService.UploadFile(file.InputStream, file.FileName, currentUser.Id);
+                    user.PhotoUser = @"~\" + fileService.UploadFile(file.InputStream, file.FileName, currentUser.Id)
+                                                    .Replace(HttpContext.Request.PhysicalApplicationPath, String.Empty);
 
                     userService.Update(new UserDTO
                     {
@@ -305,7 +308,7 @@ namespace Gallery.WEB.Controllers
             if (!string.IsNullOrWhiteSpace(user.PhotoUser))
             {
                 userService.DeleteAvatar(id);
-                fileService.DeleteFile(user.PhotoUser, user.Id);
+                fileService.DeleteFile(System.Web.HttpContext.Current.Server.MapPath(user.PhotoUser), user.Id);
                 ViewBag.PhotoUserUrl = "~/images/user-icon.png";
             }
             return RedirectToAction("Index", "Home");

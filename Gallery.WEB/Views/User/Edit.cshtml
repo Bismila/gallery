@@ -113,7 +113,8 @@
             <div class="imgEditCurrentUser">
                 @if (!string.IsNullOrWhiteSpace(Model.PhotoUser))
                 {
-                    <img class="" src="@Html.DisplayFor(modelItem => modelItem.PhotoUser)" />
+                    @*<img class="" src="@Html.DisplayFor(modelItem => modelItem.PhotoUser)" />*@
+                    <img class="" src='@Url.Content(Model.PhotoUser)' />
                 }
                 else
                 {

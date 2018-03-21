@@ -10,11 +10,12 @@
             <div class="img-friend__main">
                 @if (!string.IsNullOrWhiteSpace(@Model.PhotoUser))
                 {
-                    <img src="@Model.PhotoUser" alt="@Model.Login" />
+                    @*<img src="@Model.PhotoUser" alt="@Model.Login" />*@
+                    <img src='@Url.Content(Model.PhotoUser)' />
                 }
                 else
                 {
-                    <img src="@ViewBag.PhotoUserUrlDefault" alt="@Model.Login"  class="gag"/>
+                    <img src="@ViewBag.PhotoUserUrlDefault" alt="@Model.Login" class="gag" />
                 }
 
             </div>
@@ -71,7 +72,8 @@
                         <div class="hidden">@Html.DisplayFor(modelItem => Model.Images[i].User.Id)</div>
 
                         <div class="imgs-slide__img">
-                            <img src=" @Html.DisplayFor(modelItem => Model.Images[i].PathImage)" />
+                            @*<img src=" @Html.DisplayFor(modelItem => Model.Images[i].PathImage)" />*@
+                            <img src='@Url.Content(Model.Images[i].PathImage)' />
                         </div>
                         <div class="photo-name">
                             <a href="@Url.Action("CountLikes", "Image", new { id = Model.Images[i].Id }, null)" id="@Model.Images[i].Id">
