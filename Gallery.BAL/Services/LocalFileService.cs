@@ -16,13 +16,9 @@ namespace Gallery.BAL.Services
             string path = null;
             if (stream.Length != 0)
             {
-                //string currentPath = Directory.GetCurrentDirectory();
-                //if (!Directory.Exists(Path.Combine(currentPath, userId.ToString())))
-                //    Directory.CreateDirectory(Path.Combine(currentPath, userId.ToString()));
-                path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, 
-                                        @"images\"+ Directory.CreateDirectory(userId.ToString()),
-                                        fileName);
-                //path = Path.Combine("images", fileName);
+                path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                       @"images\",// + Directory.CreateDirectory(userId.ToString()),
+                                       fileName);
             }
             using (FileStream fileStream = File.Create(path, (int)stream.Length))// new FileStream(path, FileMode.Append, FileAccess.Write))// File.Create(fileName, (int)stream.Length)))
             {

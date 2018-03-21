@@ -2,6 +2,7 @@
 using Gallery.BAL.DTO.ImagesDto;
 using Gallery.BAL.Interfaces;
 using Gallery.WEB.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -109,9 +110,9 @@ namespace Gallery.WEB.Controllers
             else
             {
                 //var path = Server.MapPath("~/images/" + file.FileName);
-                image.PathImage = fileService.UploadFile(file.InputStream, file.FileName, currentUser.Id);
-
-                if (string.IsNullOrWhiteSpace(image.PathImage))
+                image.PathImage = @"~\" + fileService.UploadFile(file.InputStream, file.FileName, currentUser.Id)
+                                            .Replace(HttpContext.Request.PhysicalApplicationPath, String.Empty);
+            if (string.IsNullOrWhiteSpace(image.PathImage))
                 {
                     ViewBag.IsFile = "Such file already exists!";
                     return View("CreateImage");
@@ -125,7 +126,6 @@ namespace Gallery.WEB.Controllers
                     Name = image.Name,
                     ImageDate = image.ImageDate,
                     PathImage = image.PathImage,
-                    //PathImage = Server.MapPath(image.PathImage),
                     UserName = currentUser.Login,
                     CountLikes = likeService.CountLikes(image.Id),
                     isLike = likeService.IsLike(image.Id, currentUser.Id)

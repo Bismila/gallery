@@ -222,7 +222,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="images\black_pencil_gray.png" />
-    <Content Include="images\flower.jpg" />
+    <Content Include="images\button.png" />
     <Content Include="images\pen.png" />
     <Content Include="images\pen1.svg" />
     <Content Include="images\user-icon.png" />
