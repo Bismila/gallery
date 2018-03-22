@@ -37,7 +37,6 @@ namespace Gallery.Tests.ServicesTests
                 Login = "Max",
                 Email = "max@nik.ru",
                 Password = "111111",
-                //ConfirmPassword = "111111",
                 RoleId = 3
 
             };
@@ -88,8 +87,6 @@ namespace Gallery.Tests.ServicesTests
             }));
 
             // Act
-            UserDTO curUser = userService.GetCurrentUser(user.Login);
-
             imageService.Create(newImage);
             List<CreateUpdateDto> actualLisImages = imageService.GetAllElements().ToList();
 
@@ -98,7 +95,7 @@ namespace Gallery.Tests.ServicesTests
             mockImage.Verify(i => i.Create(It.Is<Image>(t => t.Id == 2)), Times.Once);
             mockImage.Verify(actual => actual.GetAllElements(), Times.Once);
 
-            Assert.AreEqual(dbImages.Count(), actualLisImages.Count());
+            Assert.AreEqual(dbImages.Count, actualLisImages.Count);
 
             IEnumerator<CreateUpdateImageDto> listExp = dbImages.GetEnumerator();
 
@@ -135,7 +132,6 @@ namespace Gallery.Tests.ServicesTests
                 Login = "Max",
                 Email = "max@nik.ru",
                 Password = "111111",
-                //ConfirmPassword = "111111",
                 RoleId = 3
 
             };
@@ -169,7 +165,7 @@ namespace Gallery.Tests.ServicesTests
                 UserId = 10,
                 UserName = user.Name
             };
-            for (int i = 0; i < dbImages.Count(); i++)
+            for (int i = 0; i < dbImages.Count; i++)
             {
                 if (dbImages[i].Id == newImage.Id)
                 {
@@ -201,7 +197,6 @@ namespace Gallery.Tests.ServicesTests
             }));
 
             // Act
-            UserDTO curUser = userService.GetCurrentUser(user.Login);
             imageService.Update(newImage);
             List<CreateUpdateDto> actualLisImages = imageService.GetAllElements().ToList();
 
@@ -210,7 +205,7 @@ namespace Gallery.Tests.ServicesTests
             mockImage.Verify(i => i.Update(It.Is<Image>(t => t.Id == 2)), Times.Once);
             mockImage.Verify(actual => actual.GetAllElements(), Times.Once);
 
-            Assert.AreEqual(dbImages.Count(), actualLisImages.Count());
+            Assert.AreEqual(dbImages.Count, actualLisImages.Count);
 
             IEnumerator<CreateUpdateImageDto> listExp = dbImages.GetEnumerator();
 
@@ -265,7 +260,7 @@ namespace Gallery.Tests.ServicesTests
                 }
             };
             var delImageId = 3;
-            for (int i = 0; i < dbImages.Count(); i++)
+            for (int i = 0; i < dbImages.Count; i++)
             {
                 if (dbImages[i].Id == delImageId)
                 {
@@ -289,10 +284,10 @@ namespace Gallery.Tests.ServicesTests
             List<CreateUpdateDto> actualLisImages = imageService.GetAllElements().ToList();
 
             // Assert
-            mockImage.Verify(i => i.Delete(It.Is<int>(id => id == delImageId)), Times.Once);
+            mockImage.Verify(i => i.Delete(It.Is<long>(id => id == delImageId)), Times.Once);
             mockImage.Verify(actual => actual.GetAllElements(), Times.Once);
 
-            Assert.AreEqual(dbImages.Count(), actualLisImages.Count());
+            Assert.AreEqual(dbImages.Count, actualLisImages.Count);
 
             IEnumerator<CreateUpdateDto> listExp = dbImages.GetEnumerator();
 
@@ -360,7 +355,7 @@ namespace Gallery.Tests.ServicesTests
             // Assert
             mockImage.Verify(actual => actual.GetAllElements(), Times.Once);
 
-            Assert.AreEqual(dbImages.Count(), actualLisImages.Count());
+            Assert.AreEqual(dbImages.Count, actualLisImages.Count);
 
             IEnumerator<CreateUpdateDto> listExp = dbImages.GetEnumerator();
 
@@ -413,7 +408,7 @@ namespace Gallery.Tests.ServicesTests
             };
             var getElementById = 2;
             CreateUpdateDto findElement = new CreateUpdateDto();
-            for (int i = 0; i < dbImages.Count(); i++)
+            for (int i = 0; i < dbImages.Count; i++)
             {
                 if (dbImages[i].Id == getElementById)
                 {
@@ -452,7 +447,6 @@ namespace Gallery.Tests.ServicesTests
             var mockComments = new Mock<ICommentRepository>();
 
             var imageService = new ImageService(mockImage.Object, mockUser.Object, mockFriend.Object, mockLikes.Object, mockComments.Object);
-            var userService = new UserService(mockUser.Object, mockFriend.Object, mockRoles.Object);
 
             var user = new User
             {
@@ -510,7 +504,7 @@ namespace Gallery.Tests.ServicesTests
             // Assert
             mockImage.Verify(actual => actual.GetAllElementsFromUser(user.Id), Times.Once);
 
-            Assert.AreEqual(dbImages.Count(), actualLisImages.Count());
+            Assert.AreEqual(dbImages.Count, actualLisImages.Count);
 
             IEnumerator<CreateUpdateImageDto> listExp = dbImages.GetEnumerator();
 
@@ -563,7 +557,7 @@ namespace Gallery.Tests.ServicesTests
             };
             var getElementById = 2;
             CreateUpdateImageDto findElement = new CreateUpdateImageDto();
-            for (int i = 0; i < dbImages.Count(); i++)
+            for (int i = 0; i < dbImages.Count; i++)
             {
                 if (dbImages[i].Id == getElementById)
                 {

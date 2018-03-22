@@ -44,11 +44,20 @@ namespace Gallery.Tests.RepositoryTests
                 }
             };
             var sql = @"SELECT * FROM Images";
-            connection.SetupDapper(c => c.Query<Image>(sql, null, null, true, null, null)).Returns(expected);
+            connection.SetupDapper(c => c.Query<Image>(sql, null, null, true, null, null))
+                                                        .Returns(expected);
 
             var img = new ImageRepository(connection.Object);
-            var actual = img.GetAllElements();
-            CollectionAssert.Equals(expected, actual);
+            var actual = img.GetAllElements().ToList();
+            Assert.AreEqual(expected.Count, actual.Count);
+
+            IEnumerator<Image> expextedListUsers = expected.GetEnumerator();
+            IEnumerator<Image> actualListUsers = actual.GetEnumerator();
+
+            while (expextedListUsers.MoveNext() && actualListUsers.MoveNext())
+            {
+                Assert.AreEqual(expextedListUsers.Current.ToString(), actualListUsers.Current.ToString());
+            }
         }
 
         [TestMethod]
@@ -85,36 +94,20 @@ namespace Gallery.Tests.RepositoryTests
 
             expDB.Add(item);
 
-            connection.SetupDapper(c => c.Query<Image>(sqlQuery, null, null, true, null, null)).Returns(expDB);
+            connection.SetupDapper(c => c.Query<Image>(sqlQuery, null, null, true, null, null))
+                .Returns(expDB);
 
             var img = new ImageRepository(connection.Object);
+            img.Create(item);
+            var actual = img.GetAllElements().ToList();
+            Assert.AreEqual(expDB.Count, actual.Count);
 
-            bool expFlag = false;
-            if (expDB.Count != 0)
+            IEnumerator<Image> expextedListUsers = expDB.GetEnumerator();
+            IEnumerator<Image> actualListUsers = actual.GetEnumerator();
+
+            while (expextedListUsers.MoveNext() && actualListUsers.MoveNext())
             {
-                expFlag = true;
-            }
-            else
-            {
-                img.Create(item);
-
-                var db = img.GetAllElements().ToList();
-
-                bool flag = true;
-                for (int i = 0; i < expDB.Count; i++)
-                {
-                    if (expDB[i].Id.Equals(db[i].Id))
-                    {
-                        flag = true;
-                    }
-                    else
-                    {
-                        flag = false;
-                        break;
-                    }
-                }
-                bool equal = expDB.Count.Equals(db.Count());
-                CollectionAssert.Equals(expFlag, flag);
+                Assert.AreEqual(expextedListUsers.Current.ToString(), actualListUsers.Current.ToString());
             }
         }
 
@@ -152,8 +145,10 @@ namespace Gallery.Tests.RepositoryTests
             var id = 2;
 
             if (id > expDB.Count || id <= 0)
-            { }
-            else
+            {
+                Assert.Fail();
+            }
+            else if(id < expDB.Count || id >= 0)
             {
                 expDB.RemoveAt(id - 1);
 
@@ -178,6 +173,16 @@ namespace Gallery.Tests.RepositoryTests
                     }
                 }
                 bool equal = expDB.Count.Equals(db.Count());
+                var actual = img.GetAllElements().ToList();
+                Assert.AreEqual(expDB.Count, actual.Count);
+
+                IEnumerator<Image> expextedListUsers = expDB.GetEnumerator();
+                IEnumerator<Image> actualListUsers = actual.GetEnumerator();
+
+                while (expextedListUsers.MoveNext() && actualListUsers.MoveNext())
+                {
+                    Assert.AreEqual(expextedListUsers.Current.ToString(), actualListUsers.Current.ToString());
+                }
             }
         }
 
@@ -218,12 +223,14 @@ namespace Gallery.Tests.RepositoryTests
             var img = new ImageRepository(connection.Object);
 
             if (id > expDB.Count || id <= 0)
-            { }
+            {
+                Assert.Fail();
+            }
             else
             {
                 img.Get(id);
 
-                var db = img.GetAllElements();
+                var db = img.GetAllElements().ToList();
 
                 bool flag = false;
 
@@ -239,7 +246,15 @@ namespace Gallery.Tests.RepositoryTests
                         flag = false;
                     }
                 }
-                bool equal = expDB.Count.Equals(db.Count());
+                Assert.AreEqual(expDB.Count, db.Count);
+
+                IEnumerator<Image> expextedListUsers = expDB.GetEnumerator();
+                IEnumerator<Image> actualListUsers = db.GetEnumerator();
+
+                while (expextedListUsers.MoveNext() && actualListUsers.MoveNext())
+                {
+                    Assert.AreEqual(expextedListUsers.Current.ToString(), actualListUsers.Current.ToString());
+                }
             }
         }
 
@@ -293,7 +308,9 @@ namespace Gallery.Tests.RepositoryTests
 
             var img = new ImageRepository(connection.Object);
             if (id > expDB.Count || id <= 0)
-            { }
+            {
+                Assert.Fail();
+            }
             else
             {
                 img.Update(expected);
@@ -312,7 +329,15 @@ namespace Gallery.Tests.RepositoryTests
                         flag = false;
                     }
                 }
-                bool equal = expDB.Count.Equals(db.Count());
+                Assert.AreEqual(expDB.Count, db.Count);
+
+                IEnumerator<Image> expextedListUsers = expDB.GetEnumerator();
+                IEnumerator<Image> actualListUsers = db.GetEnumerator();
+
+                while (expextedListUsers.MoveNext() && actualListUsers.MoveNext())
+                {
+                    Assert.AreEqual(expextedListUsers.Current.ToString(), actualListUsers.Current.ToString());
+                }
             }
         }
     }

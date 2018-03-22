@@ -57,6 +57,13 @@ namespace Gallery.Tests.RepositoryTests
             var isEq = repo.ListEquals(expected, actualRepo);
 
             bool isEqual = expected.Count.Equals(actualRepo.Count());
+            if (isEqual)
+            {
+                Assert.AreEqual(expected.Count, actualRepo.Count);
+            }
+            else
+                Assert.Fail();
+            //Assert.AreEqual(expected.Count, actualRepo.Count);
         }
 
         [TestMethod]
@@ -151,7 +158,13 @@ namespace Gallery.Tests.RepositoryTests
 
             var repo = new UserRepository(connection.Object);
             var actualRepo = repo.GetAllElements().ToList();
-            var isEq = repo.ListEquals(expected, actualRepo);
+            var isEqual = repo.ListEquals(expected, actualRepo);
+            if (isEqual)
+            {
+                Assert.AreEqual(expected.Count, actualRepo.Count);
+            }
+            else
+                Assert.Fail();
         }
 
         [TestMethod]
@@ -209,6 +222,12 @@ namespace Gallery.Tests.RepositoryTests
 
             var actualRepo = repo.GetAllElements().ToList();
             var isEq = repo.ListEquals(expected, actualRepo);
+            if (isEq)
+            {
+                Assert.AreEqual(expected.Count, actualRepo.Count);
+            }
+            else
+                Assert.Fail();
         }
 
         [TestMethod]
@@ -254,9 +273,14 @@ namespace Gallery.Tests.RepositoryTests
                 .Returns(expected);
 
             var repo = new UserRepository(connection.Object);
-            var addElemToDb = repo.Get(elemId);
             var actualRepo = repo.GetAllElements().ToList();
             var isEq = repo.ListEquals(expected, actualRepo);
+            if (isEq)
+            {
+                Assert.AreEqual(expected.Count, actualRepo.Count);
+            }
+            else
+                Assert.Fail();
         }
     }
 }

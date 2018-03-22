@@ -62,7 +62,7 @@ namespace Gallery.Tests.ServicesTests
             mockRole.Verify(i => i.Create(It.Is<Role>(t => t.Id == 3)), Times.Once);
             mockRole.Verify(actual => actual.GetAllElements(), Times.Once);
 
-            Assert.AreEqual(listRolesDB.Count(), actualLisRoles.Count());
+            Assert.AreEqual(listRolesDB.Count, actualLisRoles.Count);
 
             IEnumerator<RoleDTO> listExp = listRolesDB.GetEnumerator();
 
@@ -103,7 +103,7 @@ namespace Gallery.Tests.ServicesTests
             };
 
             var delRoleId = 2;
-            for (int i = 0; i < listRolesDB.Count(); i++)
+            for (int i = 0; i < listRolesDB.Count; i++)
             {
                 if(listRolesDB[i].Id == delRoleId)
                 {
@@ -124,10 +124,10 @@ namespace Gallery.Tests.ServicesTests
             var actualLisRoles = roleService.GetAllElements().ToList();
 
             // Assert
-            mockRole.Verify(r => r.Delete(It.Is<int>(id => id == delRoleId)), Times.Once);
+            mockRole.Verify(r => r.Delete(It.Is<long>(id => id == delRoleId)), Times.Once);
             mockRole.Verify(actual => actual.GetAllElements(), Times.Once);
 
-            Assert.AreEqual(listRolesDB.Count(), actualLisRoles.Count());
+            Assert.AreEqual(listRolesDB.Count, actualLisRoles.Count);
 
             IEnumerator<RoleDTO> listExp = listRolesDB.GetEnumerator();
 
@@ -172,7 +172,7 @@ namespace Gallery.Tests.ServicesTests
                 Name = "super user"
             };
 
-            for (int i = 0; i < listRolesDB.Count(); i++)
+            for (int i = 0; i < listRolesDB.Count; i++)
             {
                 if (listRolesDB[i].Id == role.Id)
                 {
@@ -200,7 +200,7 @@ namespace Gallery.Tests.ServicesTests
             mockRole.Verify(i => i.Update(It.Is<Role>(t => t.Id == 3)), Times.Once);
             mockRole.Verify(actual => actual.GetAllElements(), Times.Once);
 
-            Assert.AreEqual(listRolesDB.Count(), actualLisRoles.Count());
+            Assert.AreEqual(listRolesDB.Count, actualLisRoles.Count);
 
             IEnumerator<RoleDTO> listExp = listRolesDB.GetEnumerator();
 
@@ -241,7 +241,7 @@ namespace Gallery.Tests.ServicesTests
                 }
             };
             RoleDTO findElement = new RoleDTO();
-            for (int i = 0; i < listRolesDB.Count(); i++)
+            for (int i = 0; i < listRolesDB.Count; i++)
             {
                 if (listRolesDB[i].Id == getRoleId)
                 {
@@ -259,7 +259,7 @@ namespace Gallery.Tests.ServicesTests
             var actualRole = roleService.Get(getRoleId);
 
             // Assert
-            mockRole.Verify(r => r.Get(It.Is<int>(id => id == getRoleId)), Times.AtLeastOnce);
+            mockRole.Verify(r => r.Get(It.Is<long>(id => id == getRoleId)), Times.AtLeastOnce);
 
             Assert.AreEqual(findElement.ToString(), actualRole.ToString());
         }
@@ -298,10 +298,10 @@ namespace Gallery.Tests.ServicesTests
             }));
 
             // Act
-            var actualLisRoles = roleService.GetAllElements();
+            var actualLisRoles = roleService.GetAllElements().ToList();
 
             //Assert
-            Assert.AreEqual(listRolesDB.Count(), actualLisRoles.Count());
+            Assert.AreEqual(listRolesDB.Count, actualLisRoles.Count);
 
             IEnumerator<RoleDTO> listExp = listRolesDB.GetEnumerator();
 
