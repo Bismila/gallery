@@ -40,8 +40,8 @@ namespace Gallery.Api
             container.Register<ICommentService, CommentService>();
             container.Register<IImageRepository, ImageRepository>();
             //container.Register<IImageRepository, EFImageRepository>();
-            container.Register<IFileService, BlobService>();
-
+            //container.Register<IFileService, BlobService>();
+            container.Register<IFileService, LocalFileService>();
 
             //container.Register<DbContext, GalleryContext>();
 

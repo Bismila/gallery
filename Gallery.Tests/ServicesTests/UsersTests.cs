@@ -64,7 +64,7 @@ namespace Gallery.Tests.ServicesTests
             mock.Verify(u => u.Create(It.Is<User>(t => t.Id == 1)), Times.Once);
             mock.Verify(actual => actual.GetAllElements(), Times.Once);
 
-            Assert.AreEqual(dbUsers.Count(), actualListUsers.Count());
+            Assert.AreEqual(dbUsers.Count, actualListUsers.Count);
 
             IEnumerator<UserDTO> listExp = dbUsers.GetEnumerator();
             IEnumerator<UserDTO> listAct = actualListUsers.GetEnumerator();
@@ -133,7 +133,7 @@ namespace Gallery.Tests.ServicesTests
             // Assert
             mock.Verify(u => u.GetAllElements(), Times.Once);
 
-            Assert.AreEqual(expectedUsers.Count(), actualUsers.Count());
+            Assert.AreEqual(expectedUsers.Count, actualUsers.Count);
 
             IEnumerator<UserDTO> expextedListUsers = expectedUsers.GetEnumerator();
             IEnumerator<UserDTO> actualListUsers = actualUsers.GetEnumerator();
@@ -188,6 +188,7 @@ namespace Gallery.Tests.ServicesTests
             var elementId = 3;
             expectedLUser.RemoveAt(elementId - 1);
 
+            mockFriend.Setup(f => f.DeleteAllFriendsByUser(elementId));
             mockUser.Setup(u => u.Delete(elementId));
             mockUser.Setup(u => u.GetAllElements()).Returns(expectedLUser.Select(x => new User
             {
@@ -204,10 +205,11 @@ namespace Gallery.Tests.ServicesTests
             var actualLUsers = userService.GetAllElements().ToList();
 
             //assert
-            mockUser.Verify(u => u.Delete(It.Is<int>(id => id == elementId)), Times.Once);
+            mockFriend.Verify(f => f.DeleteAllFriendsByUser(It.Is<long>(id => id == elementId)), Times.Once);
+            mockUser.Verify(u => u.Delete(It.Is<long>(id => id == elementId)), Times.Once);
             mockUser.Verify(u => u.GetAllElements(), Times.Once);
 
-            Assert.AreEqual(expectedLUser.Count(), actualLUsers.Count());
+            Assert.AreEqual(expectedLUser.Count, actualLUsers.Count);
 
             IEnumerator<UserDTO> expectedListUsers = expectedLUser.GetEnumerator();
             IEnumerator<UserDTO> actualListUsers = actualLUsers.GetEnumerator();
@@ -300,7 +302,7 @@ namespace Gallery.Tests.ServicesTests
             mockUser.Verify(u => u.Update(It.Is<User>(t => t.Id == newUser.Id)), Times.Once);
             mockUser.Verify(u => u.GetAllElements(), Times.Once);
 
-            Assert.AreEqual(expectedLUser.Count(), actualLUsers.Count());
+            Assert.AreEqual(expectedLUser.Count, actualLUsers.Count);
 
             IEnumerator<UserDTO> expectedListUsers = expectedLUser.GetEnumerator();
             IEnumerator<UserDTO> actualListUsers = actualLUsers.GetEnumerator();
@@ -393,14 +395,11 @@ namespace Gallery.Tests.ServicesTests
             }));
 
             //act
-            var actualLUsers = userService.GetAllElements().ToList();
             UserDTO actualUser = userService.Get(searchId);
 
             //assert
-            mockUser.Verify(u => u.Get(It.Is<int>(id => id == searchId)), Times.Once);
-            mockUser.Verify(u => u.GetAllElements(), Times.Once);
+            mockUser.Verify(u => u.Get(It.Is<long>(id => id == searchId)), Times.Once);
 
-            var check = String.Compare(actualUser.ToString(), expUser.ToString());
             Assert.AreEqual(actualUser.ToString(), expUser.ToString());
 
         }
@@ -482,7 +481,6 @@ namespace Gallery.Tests.ServicesTests
             //assert
             mockUser.Verify(u => u.GetCurrentUser(It.Is<string>(Login => Login == searchUserName)), Times.Once);
 
-            var check = String.Compare(actualUser.ToString(), expUser.ToString());
             Assert.AreEqual(actualUser.ToString(), expUser.ToString());
         }
 
@@ -495,7 +493,6 @@ namespace Gallery.Tests.ServicesTests
             var mockRoles = new Mock<IRoleRepository>();
             var mockImage = new Mock<IImageRepository>();
 
-            var friendService = new FriendService(mockFriend.Object, mockImage.Object);
             var userService = new UserService(mockUser.Object, mockFriend.Object, mockRoles.Object);
     
 
@@ -571,11 +568,11 @@ namespace Gallery.Tests.ServicesTests
             var searchLogin = "sa";
             var listSearchedFriends = new List<UserDTO>();
 
-            for (int i = 0; i < dbUsers.Count(); i++)
+            for (int i = 0; i < dbUsers.Count; i++)
             {
                 if (dbUsers[i].Login.ToLower().Contains(searchLogin.ToLower()))
                 {
-                    for (int j = 0; j < dbFriends.Count(); j++)
+                    for (int j = 0; j < dbFriends.Count; j++)
                     {
                         if (dbUsers[i].Id == dbFriends[j].FriendId)
                         {
@@ -614,7 +611,7 @@ namespace Gallery.Tests.ServicesTests
             mockUser.Verify(u => u.SearchFriends(It.Is<string>(s => s == searchLogin)), Times.Once);
             mockUser.Verify(actual => actual.GetAllElements(), Times.Once);
 
-            Assert.AreEqual(listSearchedFriends.Count(), actualListUsers.Count());
+            Assert.AreEqual(listSearchedFriends.Count, actualListUsers.Count);
 
             IEnumerator<UserDTO> listExp = listSearchedFriends.GetEnumerator();
             IEnumerator<UserDTO> listAct = actualListUsers.GetEnumerator();
@@ -676,7 +673,7 @@ namespace Gallery.Tests.ServicesTests
             };
             var searchLogin = "sam";
             var listSearchedUsers = new List<UserDTO>();
-            for (int i = 0; i < dbUsers.Count(); i++)
+            for (int i = 0; i < dbUsers.Count; i++)
             {
                 if (dbUsers[i].Login.ToLower().Contains(searchLogin.ToLower()))
                 {
@@ -712,7 +709,7 @@ namespace Gallery.Tests.ServicesTests
             mockUser.Verify(u => u.SearchUsers(It.Is<string>(s => s == searchLogin)), Times.Once);
             mockUser.Verify(actual => actual.GetAllElements(), Times.Once);
 
-            Assert.AreEqual(listSearchedUsers.Count(), actualListUsers.Count());
+            Assert.AreEqual(listSearchedUsers.Count, actualListUsers.Count);
 
             IEnumerator<UserDTO> listExp = listSearchedUsers.GetEnumerator();
             IEnumerator<UserDTO> listAct = actualListUsers.GetEnumerator();
@@ -818,11 +815,11 @@ namespace Gallery.Tests.ServicesTests
             var actLFriends = userService.FriendsAndNotFriends(currentUser).ToList();
 
             // Assert
-            mockUser.Verify(u => u.Get(It.Is<int>(id => id == currentUser.Id)), Times.AtLeastOnce);
+            mockUser.Verify(u => u.Get(It.Is<long>(id => id == currentUser.Id)), Times.AtLeastOnce);
             mockUser.Verify(u => u.GetAllElements(), Times.AtLeastOnce);
             mockFriend.Verify(f => f.GetAllFriends(It.Is<User>(t => t.Id == currentUser.Id)), Times.AtLeastOnce);
 
-            Assert.AreEqual(expLFriends.Count(), actLFriends.Count());
+            Assert.AreEqual(expLFriends.Count, actLFriends.Count);
 
             IEnumerator<UserDTO> expextedListFriends = actLFriends.GetEnumerator();
             IEnumerator<UserDTO> actualListFriends = expLFriends.GetEnumerator();
@@ -832,287 +829,6 @@ namespace Gallery.Tests.ServicesTests
                 Assert.AreEqual(expextedListFriends.Current.ToString(), actualListFriends.Current.ToString());
             }
         }
-
-        //[TestMethod]
-        //public void TestGetAllImageFromUser()
-        //{
-        //    // arrange
-        //    var mockUser = new Mock<IUserRepository>();
-        //    var mockFriend = new Mock<IFriendRepository>();
-
-        //    var userService = new UserService(mockUser.Object, mockFriend.Object);
-
-        //    var ListImages = new List<ImageDTO>
-        //    {
-        //        new ImageDTO
-        //        {
-        //            Id = 1,
-        //            Name = "img1",
-        //            ImageDate = System.DateTime.Now,
-        //            PathImage = "imgpath1",
-        //            UserId = 2
-        //        },
-        //        new ImageDTO
-        //        {
-        //           Id = 2,
-        //            Name = "img2",
-        //            ImageDate = System.DateTime.Now,
-        //            PathImage = "imgpath2",
-        //            UserId = 1
-        //        },
-        //        new ImageDTO
-        //        {
-        //            Id = 3,
-        //            Name = "img3",
-        //            ImageDate = System.DateTime.Now,
-        //            PathImage = "imgpath3",
-        //            UserId = 2,
-        //        }
-        //    };
-
-
-        //    var user = new UserDTO
-        //    {
-        //        Id = 2,
-        //        Name = "Sam",
-        //        Login = "Sam",
-        //        Email = "sam@sam.ru",
-        //        Password = "111111",
-        //        RoleId = 3
-        //    };
-
-        //    var expectedLImages = new List<ImageDTO>();
-
-        //    foreach (var img in ListImages)
-        //    {
-        //        if (img.UserId == user.Id)
-        //        {
-        //            user.Images.Add(new Image
-        //            {
-        //                Id = img.Id,
-        //                Name = img.Name,
-        //                ImageDate = img.ImageDate,
-        //                PathImage = img.PathImage,
-        //                UserId = img.UserId
-        //            });
-        //            expectedLImages.Add(img);
-        //        }
-        //        else
-        //        {
-        //            continue;
-        //        }
-        //    }
-
-        //    mockUser.Setup(u => u.Get(user.Id)).Returns(new User
-        //    {
-        //        Id = user.Id,
-        //        Name = user.Name,
-        //        Login = user.Login,
-        //        Password = user.Password,
-        //        Email = user.Email,
-        //        RoleId = user.RoleId,
-        //    });
-
-        //    mockUser.Setup(u => u.GetAllImageFromFriendsAndUser(It.IsAny<User>())).Returns(expectedLImages.Select(im => new Image
-        //    {
-        //        Id = im.Id,
-        //        Name = im.Name,
-        //        ImageDate = im.ImageDate,
-        //        PathImage = im.PathImage,
-        //        UserId = im.UserId
-        //    }));
-
-        //    // Act
-        //    var actualLImages = userService.GetAllImageFromFriendsAndUser(user).ToList();
-
-        //    // Assert
-        //    mockUser.Verify(u => u.Get(It.Is<int>(id => id == user.Id)), Times.Once);
-        //    mockUser.Verify(u => u.GetAllImageFromFriendsAndUser(It.Is<User>(t => t.Id == user.Id)), Times.Once);
-
-        //    Assert.AreEqual(expectedLImages.Count(), actualLImages.Count());
-
-        //    IEnumerator<ImageDTO> expextedListImages = expectedLImages.GetEnumerator();
-        //    IEnumerator<ImageDTO> actualListImages = actualLImages.GetEnumerator();
-
-        //    while (expextedListImages.MoveNext() && actualListImages.MoveNext())
-        //    {
-        //        Assert.AreEqual(expextedListImages.Current.ToString(), actualListImages.Current.ToString());
-        //    }
-        //}
-
-        //[TestMethod]
-        //public void TestGetAllImageForCurrenrUser()
-        //{
-        //    // arrange
-        //    var mock = new Mock<IUserRepository>();
-        //    var mockFriend = new Mock<IFriendRepository>();
-        //    var mockImage = new Mock<IImageRepository>();
-
-        //    var userService = new UserService(mock.Object, mockFriend.Object);
-        //    var imageService = new ImageService(mockImage.Object, mock.Object, mockFriend.Object);
-
-        //    var dbImages = new List<ImageDTO>
-        //    {
-        //        new ImageDTO
-        //        {
-        //            Id = 2,
-        //            Name = "image 02",
-        //            ImageDate = System.DateTime.Now,
-        //            PathImage = "blabla",
-        //            UserId = 10,
-        //        },
-        //         new ImageDTO
-        //        {
-        //            Id = 3,
-        //            Name = "image 03",
-        //            ImageDate = System.DateTime.Now,
-        //            PathImage = "blabla",
-        //            UserId = 10,
-        //        },
-        //           new ImageDTO
-        //        {
-        //            Id = 4,
-        //            Name = "image 04",
-        //            ImageDate = System.DateTime.Now,
-        //            PathImage = "blabla",
-        //            UserId = 3,
-        //        },
-        //              new ImageDTO
-        //        {
-        //            Id = 5,
-        //            Name = "image 05",
-        //            ImageDate = System.DateTime.Now,
-        //            PathImage = "blabla",
-        //            UserId = 4,
-        //        }
-
-        //    };
-
-        //    UserDTO currentUser = new UserDTO
-        //    {
-        //        Id = 10,
-        //        Name = "Lisa",
-        //        Login = "Lisa",
-        //        Email = "lisa@nik.ru",
-        //        Password = "111111",
-        //        RoleId = 3,
-        //    };
-        //    var listFoundedImagesForCurrentUser = new List<ImageDTO>();
-        //    for (int j = 0; j < dbImages.Count(); j++)
-        //    {
-        //        if (currentUser.Id == dbImages[j].UserId)
-        //        {
-        //            listFoundedImagesForCurrentUser.Add(dbImages[j]);
-        //            currentUser.Images.Add(new Image
-        //            {
-        //                Id = dbImages[j].Id,
-        //                ImageDate = dbImages[j].ImageDate,
-        //                Name = dbImages[j].Name,
-        //                PathImage = dbImages[j].PathImage,
-        //                UserId = dbImages[j].UserId
-        //            });
-        //        }
-        //    }
-
-
-        //    mock.Setup(img => img.GetAllImageForCurrentUser(It.IsAny<User>()))
-        //        .Returns(listFoundedImagesForCurrentUser.Select(i => new Image
-        //        {
-        //            Id = i.Id,
-        //            Name = i.Name,
-        //            ImageDate = i.ImageDate,
-        //            PathImage = i.PathImage,
-        //            User = i.User,
-        //            UserId = i.UserId,
-        //        }));
-
-        //    // Act
-        //    IEnumerable<ImageDTO> actualListImagesFromCurrentUser = userService.GetAllImageForCurrentUser(new UserDTO
-        //    {
-        //        Id = currentUser.Id,
-        //        Email = currentUser.Email,
-        //        Friends = currentUser.Friends,
-        //        Images = currentUser.Images,
-        //        Login = currentUser.Login,
-        //        Name = currentUser.Name,
-        //        Password = currentUser.Password,
-        //        PhotoUser = currentUser.PhotoUser,
-        //        RoleId = currentUser.RoleId,
-        //        Roles = currentUser.Roles
-        //    }).ToList();
-
-        //    // Assert
-        //    mock.Verify(u => u.Get(It.Is<int>(s => s == currentUser.Id)), Times.AtLeastOnce);
-        //    mock.Verify(actual => actual.GetAllImageForCurrentUser(It.IsAny<User>()), Times.Once);
-
-        //    Assert.AreEqual(listFoundedImagesForCurrentUser.Count(), actualListImagesFromCurrentUser.Count());
-
-        //    IEnumerator<ImageDTO> listExp = listFoundedImagesForCurrentUser.GetEnumerator();
-        //    IEnumerator<ImageDTO> listAct = actualListImagesFromCurrentUser.GetEnumerator();
-
-        //    while (listExp.MoveNext() && listAct.MoveNext())
-        //    {
-        //        Assert.AreEqual(listExp.Current.ToString(), listAct.Current.ToString());
-        //    }
-        //}
-
-        //[TestMethod]
-        //public void TestRoleIdByRoleName()
-        //{
-        //    //arrange
-        //    var mockUser = new Mock<IUserRepository>();
-        //    var mockFriend = new Mock<IFriendRepository>();
-        //    var mockRoles = new Mock<IRoleRepository>();
-
-        //    var userService = new UserService(mockUser.Object, mockFriend.Object, mockRoles.Object);
-           
-        //    var expectedRoles = new List<RoleDTO>
-        //    {
-        //        new RoleDTO
-        //        {
-        //            Id = 1,
-        //            Name = "admin"
-        //        },
-        //        new RoleDTO
-        //        {
-        //            Id = 2,
-        //            Name = "moderator"
-        //        },
-        //        new RoleDTO
-        //        {
-        //            Id = 3,
-        //            Name = "user"
-        //        }
-        //    };
-
-        //    var searchRoleName = "moderator";
-
-        //    var expRole = new RoleDTO();
-        //    foreach (var r in expectedRoles)
-        //    {
-        //        if (r.Name == searchRoleName)
-        //        {
-        //            expRole.Id = r.Id;
-        //            expRole.Name = r.Name;
-        //            break;
-        //        }
-        //        else
-        //        {
-        //            expRole = new RoleDTO();
-        //        }
-        //    }
-
-        //    mockUser.Setup(u => u.GetRoleIdByRoleName(searchRoleName)).Returns(expRole.Id);
-
-        //    //act
-        //    var actualRoleId = userService.RoleIdByRoleName(searchRoleName);
-
-        //    //assert
-        //    mockUser.Verify(u => u.GetRoleIdByRoleName(It.Is<string>(Name => Name == searchRoleName)), Times.Once);
-
-        //    Assert.AreEqual(actualRoleId, expRole.Id);
-        //}
-
       
         [TestMethod]
         public void TestDeleteAvatar()
@@ -1174,7 +890,7 @@ namespace Gallery.Tests.ServicesTests
             mockUser.Verify(u => u.DeleteAvatar(It.Is<long>(us => us == expUser.Id)), Times.Once);
             mockUser.Verify(u => u.GetAllElements(), Times.Once);
 
-            Assert.AreEqual(expectedLUser.Count(), actualLUsers.Count());
+            Assert.AreEqual(expectedLUser.Count, actualLUsers.Count);
 
             IEnumerator<UserDTO> expectedListUsers = expectedLUser.GetEnumerator();
             IEnumerator<UserDTO> actualListUsers = actualLUsers.GetEnumerator();
@@ -1274,9 +990,9 @@ namespace Gallery.Tests.ServicesTests
             var actLFriends = userService.GetAllFriends(ListUsers[0]).ToList();
 
             // Assert
-            mockFriend.Verify(u => u.GetAllFriend(It.Is<int>(id => id == ListUsers[0].Id)), Times.AtLeastOnce);
+            mockFriend.Verify(u => u.GetAllFriend(It.Is<long>(id => id == ListUsers[0].Id)), Times.AtLeastOnce);
 
-            Assert.AreEqual(expListFriends.Count(), actLFriends.Count());
+            Assert.AreEqual(expListFriends.Count, actLFriends.Count);
 
             IEnumerator<FriendDTO> expextedListFriends = actLFriends.GetEnumerator();
             IEnumerator<FriendDTO> actualListFriends = expListFriends.GetEnumerator();
@@ -1376,10 +1092,10 @@ namespace Gallery.Tests.ServicesTests
             var actLFriends = userService.GetAllFriendsForUser(currentUser).ToList();
 
             // Assert
-            mockUser.Verify(u => u.Get(It.Is<int>(id => id == currentUser.Id)), Times.AtLeastOnce);
+            mockUser.Verify(u => u.Get(It.Is<long>(id => id == currentUser.Id)), Times.AtLeastOnce);
             mockUser.Verify(u => u.GetAllFriendsForUser(It.Is<User>(t => t.Id == currentUser.Id)), Times.AtLeastOnce);
      
-            Assert.AreEqual(expLFriends.Count(), actLFriends.Count());
+            Assert.AreEqual(expLFriends.Count, actLFriends.Count);
 
             IEnumerator<UserDTO> expextedListFriends = actLFriends.GetEnumerator();
             IEnumerator<UserDTO> actualListFriends = expLFriends.GetEnumerator();

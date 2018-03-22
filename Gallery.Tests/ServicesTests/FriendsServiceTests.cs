@@ -26,8 +26,6 @@ namespace Gallery.Tests.ServicesTests
 
             var friendService = new FriendService(mockFriend.Object, mockImage.Object);
 
-            var mockUser = new Mock<IUserRepository>();
-
             var currentUser = new UserDTO
             {
                 Id = 10,
@@ -65,12 +63,12 @@ namespace Gallery.Tests.ServicesTests
             List<FriendDTO> actualLisFriends = friendService.GetAllFriendsService(currentUser.Id).ToList();
 
             // Assert
-            mockFriend.Verify(f => f.AddFriend(It.Is<int>(us => us == addNewFriend.UserId),
-                                               It.Is<int>(fr => fr == addNewFriend.FriendId)), Times.Once);
+            mockFriend.Verify(f => f.AddFriend(It.Is<long>(us => us == addNewFriend.UserId),
+                                               It.Is<long>(fr => fr == addNewFriend.FriendId)), Times.Once);
 
-            mockFriend.Verify(f => f.GetAllFriend(It.Is<int>(curUser => curUser == currentUser.Id)), Times.AtLeastOnce);
+            mockFriend.Verify(f => f.GetAllFriend(It.Is<long>(curUser => curUser == currentUser.Id)), Times.AtLeastOnce);
 
-            Assert.AreEqual(friends.Count(), actualLisFriends.Count());
+            Assert.AreEqual(friends.Count, actualLisFriends.Count);
 
             IEnumerator<FriendDTO> listExp = friends.GetEnumerator();
 
@@ -91,7 +89,6 @@ namespace Gallery.Tests.ServicesTests
             var mockImage = new Mock<IImageRepository>();
 
             var friendService = new FriendService(mockFriend.Object, mockImage.Object);
-            var mockUser = new Mock<IUserRepository>();
 
             var currentUser = new UserDTO
             {
@@ -122,7 +119,7 @@ namespace Gallery.Tests.ServicesTests
             };
 
             var delFriendId = 2;
-            for (int i = 0; i < dbFriends.Count(); i++)
+            for (int i = 0; i < dbFriends.Count; i++)
             {
                 if(dbFriends[i].FriendId == delFriendId)
                 {
@@ -141,11 +138,11 @@ namespace Gallery.Tests.ServicesTests
             List<FriendDTO> actualLisFriends = friendService.GetAllFriendsService(currentUser.Id).ToList();
 
             // Assert
-            mockFriend.Verify(f => f.DelFriend(It.Is<int>(us => us == delFriendId)), Times.Once);
+            mockFriend.Verify(f => f.DelFriend(It.Is<long>(us => us == delFriendId)), Times.Once);
 
-            mockFriend.Verify(f => f.GetAllFriend(It.Is<int>(curUser => curUser == currentUser.Id)), Times.AtLeastOnce);
+            mockFriend.Verify(f => f.GetAllFriend(It.Is<long>(curUser => curUser == currentUser.Id)), Times.AtLeastOnce);
 
-            Assert.AreEqual(dbFriends.Count(), actualLisFriends.Count());
+            Assert.AreEqual(dbFriends.Count, actualLisFriends.Count);
 
             IEnumerator<FriendDTO> listExp = dbFriends.GetEnumerator();
 
@@ -205,9 +202,9 @@ namespace Gallery.Tests.ServicesTests
             List<FriendDTO> actualLisFriends = friendService.GetAllFriendsService(currentUser.Id).ToList();
 
             // Assert
-            mockFriend.Verify(f => f.GetAllFriend(It.Is<int>(curUser => curUser == currentUser.Id)), Times.AtLeastOnce);
+            mockFriend.Verify(f => f.GetAllFriend(It.Is<long>(curUser => curUser == currentUser.Id)), Times.AtLeastOnce);
 
-            Assert.AreEqual(dbFriends.Count(), actualLisFriends.Count());
+            Assert.AreEqual(dbFriends.Count, actualLisFriends.Count);
 
             IEnumerator<FriendDTO> listExp = dbFriends.GetEnumerator();
 
@@ -223,7 +220,6 @@ namespace Gallery.Tests.ServicesTests
         public void TestMoqGetAllImageFriends()
         {
             // arrange
-            var mockUser = new Mock<IUserRepository>();
             var mockImage = new Mock<IImageRepository>();
             var mockFriend = new Mock<IFriendRepository>();
             var friendService = new FriendService(mockFriend.Object, mockImage.Object);
@@ -307,9 +303,9 @@ namespace Gallery.Tests.ServicesTests
             List<CreateUpdateDto> actualLisImagesFromFriends = friendService.GetAllImageFriends(currentUser.Id).ToList();
 
             // Assert
-            mockImage.Verify(i => i.GetAllImagesFromFriends(It.Is<int>(curUser => curUser == currentUser.Id)), Times.AtLeastOnce);
+            mockImage.Verify(i => i.GetAllImagesFromFriends(It.Is<long>(curUser => curUser == currentUser.Id)), Times.AtLeastOnce);
 
-            Assert.AreEqual(listImages.Count(), actualLisImagesFromFriends.Count());
+            Assert.AreEqual(listImages.Count, actualLisImagesFromFriends.Count);
 
             IEnumerator<CreateUpdateDto> listExp = listImages.GetEnumerator();
 

@@ -29,8 +29,8 @@ namespace Gallery.WEB
             // 2. Configure the container (register). See below for more configuration examples
             container.Register<IUserService, UserService>();
             container.Register<IRoleService, RoleService>();
-            //container.Register<IUserRepository, UserRepository>();
-            container.Register<IUserRepository, EFUserRepository>();
+            container.Register<IUserRepository, UserRepository>();
+            //container.Register<IUserRepository, EFUserRepository>();
             container.Register<IRoleRepository, RoleRepository>();
             container.Register<IFriendRepository, FriendRepository>();
             container.Register<CustomRoleProvider>();

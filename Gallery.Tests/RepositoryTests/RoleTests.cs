@@ -32,6 +32,12 @@ namespace Gallery.Tests.RepositoryTests
             var repo = new RoleRepository(connection.Object);
             var actualRepo = repo.GetAllElements().ToList();
             var isEq = repo.ListEquals(expected, actualRepo);
+            if (isEq)
+            {
+                Assert.AreEqual(expected.Count, actualRepo.Count);
+            }
+            else
+                Assert.Fail();
         }
 
         [TestMethod]
@@ -54,6 +60,12 @@ namespace Gallery.Tests.RepositoryTests
             repo.Create(element);
             var actualRepo = repo.GetAllElements().ToList();
             var isEq = repo.ListEquals(expected, actualRepo);
+            if (isEq)
+            {
+                Assert.AreEqual(expected.Count, actualRepo.Count);
+            }
+            else
+                Assert.Fail();
         }
 
         [TestMethod]
@@ -77,6 +89,12 @@ namespace Gallery.Tests.RepositoryTests
 
             var actualRepo = repo.GetAllElements().ToList();
             var isEq = repo.ListEquals(expected, actualRepo);
+            if (isEq)
+            {
+                Assert.AreEqual(expected.Count, actualRepo.Count);
+            }
+            else
+                Assert.Fail();
         }
 
         [TestMethod]
@@ -100,6 +118,12 @@ namespace Gallery.Tests.RepositoryTests
             repo.Update(element);
             var actualRepo = repo.GetAllElements().ToList();
             var isEq = repo.ListEquals(expected, actualRepo);
+            if (isEq)
+            {
+                Assert.AreEqual(expected.Count, actualRepo.Count);
+            }
+            else
+                Assert.Fail();
         }     
 
         [TestMethod]
@@ -128,8 +152,9 @@ namespace Gallery.Tests.RepositoryTests
 
             var repo = new RoleRepository(connection.Object);
             var addElemToDb = repo.Get(elemId);
-            
-            var isEq = elemGetId.Equals(addElemToDb);
+            Assert.AreEqual(addElemToDb.Id.ToString(), elemGetId.Id.ToString());
+            Assert.AreEqual(addElemToDb.Name.ToString(), elemGetId.Name.ToString());
+
         }
     }
 }
