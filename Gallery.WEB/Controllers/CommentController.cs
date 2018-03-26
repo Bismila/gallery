@@ -25,7 +25,6 @@ namespace Gallery.WEB.Controllers
         }
 
         [HttpPost, ActionName("AddComment")]
-        //public JsonResult AddComment(int imgId, string textComment)
         public JsonResult AddComment(CommentDTO comment)
         {
             if (!string.IsNullOrWhiteSpace(comment.Text))
@@ -33,7 +32,7 @@ namespace Gallery.WEB.Controllers
                 var comm = commentService.AddComment(comment);
                 return Json(comm, JsonRequestBehavior.AllowGet);
             }
-            var str = "Your comments is empty!";
+            var str = "";
             return Json(str, JsonRequestBehavior.AllowGet);
 
         }

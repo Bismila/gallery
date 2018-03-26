@@ -103,7 +103,8 @@ input[type="file"], .myControl {
     text-transform: uppercase;
     letter-spacing: 2px;
 }
-    .mySuccess-login:hover {
+    .mySuccess-login:hover, 
+    .mySuccess-login:active{
         background-color: white;
         color: lightseagreen;
         border-color: lightseagreen;
@@ -708,6 +709,12 @@ a.bx-next {
     border-radius: 3px;
     resize: none;
     font-size: 13px;
+}
+.error {
+    border: 1px solid red;
+}
+.add-comment.error::-webkit-input-placeholder {
+    color: red;
 }
 .add-commentBtns{
     text-align: right;
