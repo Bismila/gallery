@@ -32,7 +32,7 @@ namespace Gallery.BAL.Services
                 CommentData = comment.CommentData,
                 ParentId = comment.ParentId
             });
-            var comm = commentRepository.Get(comment.ImageId);
+            var comm = commentRepository.GetLastAddedComment(comment.Id);
             var item = new CommentDTO
             {
                 Id = comm.Id,
@@ -60,14 +60,15 @@ namespace Gallery.BAL.Services
                 var item = new Comment
                 {
                     Id = comment.Id,
-                    UserId = comment.UserId,
                     ImageId = comment.ImageId,
-                    Text = comment.Text,
-                    CommentData = comm.CommentData,
                     ParentId = comment.ParentId,
+                    UserId = comment.UserId,
+                    Text = comment.Text,
+                    CommentData = DateTime.Now,
                 };
                 commentRepository.UpdateComment(item);
             }
+
            
         }
 
@@ -97,9 +98,9 @@ namespace Gallery.BAL.Services
             return false;
         }
 
-        public CommentDTO Get(long imgId)
+        public CommentDTO Get(long CommId)
         {
-            var comment = commentRepository.Get(imgId);
+            var comment = commentRepository.Get(CommId);
             var currUser = userRepository.Get(comment.UserId);
             return new CommentDTO
             {

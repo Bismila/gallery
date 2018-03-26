@@ -49,17 +49,34 @@ namespace Gallery.WEB.Controllers
             return Json("Oops... something went wrong.", JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost, ActionName("EditCimment")]
-        public JsonResult EditComment(CommentDTO comment)
+        [HttpGet, ActionName("EditComment")]
+        public JsonResult EditComment(int? id)
         {
-            if (!string.IsNullOrWhiteSpace(comment.Text))
+            if (id != null)
             {
-                commentService.UpdateComment(comment);
-                return Json(comment, JsonRequestBehavior.AllowGet);
+                var currentComment = commentService.Get((long)id);
+                return Json(currentComment, JsonRequestBehavior.AllowGet);
             }
-            var str = "Your comments is empty!";
-            return Json(str, JsonRequestBehavior.AllowGet);
+            return Json("", JsonRequestBehavior.AllowGet);
         }
+        [HttpPost, ActionName("UpdateComment")]
+        public JsonResult UpdateComment(CommentDTO updateComment)
+        {
+            var currComm = commentService.Get(updateComment.Id);
+            if (string.IsNullOrWhiteSpace(updateComment.Text))
+            {
+                return Json(currComm, JsonRequestBehavior.AllowGet);
+            }
+            else if (currComm.Text != updateComment.Text)
+            {
+                currComm.Text = updateComment.Text;
+                commentService.UpdateComment(currComm);
+                return Json(updateComment, JsonRequestBehavior.AllowGet);
+            }
+                return Json(currComm, JsonRequestBehavior.AllowGet);
+
+        }
+
 
     }
 }

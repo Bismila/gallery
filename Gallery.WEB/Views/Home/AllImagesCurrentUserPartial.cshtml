@@ -293,7 +293,7 @@
                 success: function (data) {
 
                     console.log(data);
-                    if (data == "") {
+                    if (data === "") {
                         addCommentBlock.addClass("error");
                     }
                     else {
@@ -316,8 +316,7 @@
                             '<div class="comments-block__writer">' +
                             '<a href="#">' +
                             '<span class="comments-block__imgUser">' +
-                            '<img src="' + currentUserPhoto + '" alt="" />' +
-
+                            '<img src="' + currentUserPhoto.slice(1) + '" alt="" />' +
                             '</span>' +
                             '<span class="comments-block__nameUser">' + data.UserLogin + '</span>' +
                             '</a>' +
@@ -349,14 +348,14 @@
                             '</div>' +
                             '<hr />' +
                             '</div>');
-
+                        data = "";
                         var lastCommBlock = container.find('.comments-block').last();
                         var delElActive = lastCommBlock.find('.link-editComment');
                         if (delElActive.hasClass('active')) {
                             setTimeout(function () {
                                 delElActive.removeClass('active');
 
-                            }, 3000);
+                            }, 120000);
 
                         }
                     }
@@ -382,6 +381,7 @@
                 data: { id: delCommId },
                 success: function (data) {
                     commentBlock.css('display', 'none'); // comments-block
+                    data = "";
                 },
                 failure: function (errMsg) {
                     alert(errMsg);
@@ -391,19 +391,27 @@
 
         $("body").on("click", ".editComment", function (e) {
             e.preventDefault();
-            alert("EDIT!!!!" + e.preventDefault());
+
             var valId = $(this).siblings().text();
             var delCommId = parseInt(valId);
-            var commentBlock = ($(this).parents('.comments-block')); // comments-block
-
+            var commentBlock = $(this).parents(".comments-block").find(".comments-block__content"); 
+            var editCommObg = null;
             $.ajax({
                 type: "GET",
-                url: "/Comment/EditCimment",
+                url: "/Comment/EditComment",
                 dataType: 'json',
                 contentType: 'application/json',
-                data: { id: delCommId },
+                data: {
+                    id: delCommId
+                },
                 success: function (data) {
-                    commentBlock.css('display', 'none'); // comments-block
+                    console.log(data);
+                    commentBlock.replaceWith("<div class='editCommBlock'><span class='hidden commId'>" + data.Id + "</span>" +
+                        "<textarea class='editComm'>" + data.Text + "</textarea>" +
+                        "<button class='cancelEditBtn'>Cancel</button>" +
+                        "<button type='submit' class='editCommBtn'>Edit comment</button>" + "</div>");
+
+                    data = "";
                 },
                 failure: function (errMsg) {
                     alert(errMsg);
@@ -411,6 +419,60 @@
             });
         });
 
+        $("body").on("click", ".editCommBtn", function (e) {
+            e.preventDefault();
+
+            var commBlock = $(this).parents(".comments-block");
+
+            var commIdtxt = commBlock.find(".commId").text();
+            var commId = parseInt(commIdtxt);
+            var userLogin = commBlock.find(".comments-block__nameUser").text();
+            var commDate = commBlock.find(".comments-block__date");
+            var editComm = commBlock.find(".editComm").val();
+            var setNewComment = $(this).parents(".comments-block").find(".editCommBlock");
+
+            objComm = {
+                Id: commId,
+                UserLogin: userLogin,
+                Text: editComm
+            }
+            $.ajax({
+                type: "POST",
+                url: "/Comment/UpdateComment",
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({ updateComment: objComm }),
+                success: function (data) {
+                    console.log(data);
+                    setNewComment.replaceWith('<div class="comments-block__content">' +
+                        data.Text + '</div>');
+                    var numDateNow = parseInt(data.CommentData.replace(/\D+/g, ""));
+
+                    var dateNow = new Date(numDateNow);
+
+                    var dateToStr = (dateNow.getDate() + "/" + (dateNow.getMonth() + 1) + "/" + dateNow.getFullYear() +
+                        " " + dateNow.getHours() + ":" + dateNow.getMinutes()).toString();
+                    commDate.text(dateToStr);
+                    data = "";
+                    editComm = "";
+                    
+                },
+                failure: function (errMsg) {
+                    alert(errMsg);
+                }
+            });
+        });
+
+        $("body").on("click", ".cancelEditBtn", function (e) {
+            e.preventDefault();
+            var setNewComment = $(this).parents(".comments-block").find(".editCommBlock");
+            var currTxt = $(this).parents(".comments-block").find(".editComm").val();
+            setNewComment.replaceWith('<div class="comments-block__content">' +
+                currTxt + '</div>');
+            currTxt = "";
+            
+
+        });
 
 
     });
