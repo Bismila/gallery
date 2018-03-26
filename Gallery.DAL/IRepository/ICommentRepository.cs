@@ -10,6 +10,7 @@ namespace Gallery.DAL.IRepository
         void DeleteComment(long Id);
         void UpdateComment(Comment comment);
         IEnumerable<Comment> GetAllCommentsForImage(long ImageId);
-        Comment Get(long ImageId);
+        Comment Get(long CommId);
+        Comment GetLastAddedComment(long commId);
     }
 }

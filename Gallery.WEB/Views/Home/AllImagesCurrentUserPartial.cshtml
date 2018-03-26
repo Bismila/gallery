@@ -88,7 +88,7 @@
                             <div class="imgs-slide__img container">
                                 <div class="comments clearfix">
                                     <div class="comment-wrapper">
-                                        @if (item.Comments.Count != 0)
+                                        @if (item.Comments.Count > 0)
                                         {
                                             for (int i = 0; i < item.Comments.Count(); i++)
                                             {
@@ -98,8 +98,8 @@
                                                             <span class="comments-block__imgUser">
                                                                 @if (!string.IsNullOrWhiteSpace(item.Comments[i].UserPhoto))
                                                                 {
-                                                                    <img src="@item.Comments[i].UserPhoto" alt="" />
-
+                                                                    @*<img src="@item.Comments[i].UserPhoto" alt="" />*@
+                                                                    <img src='@Url.Content(@item.Comments[i].UserPhoto)' />
                                                                     ViewBag.UserPhoto = item.Comments[i].UserPhoto;
                                                                 }
                                                                 else
@@ -115,8 +115,8 @@
                                                             <div class="delEditCommBlock">
                                                                 @if (item.Comments[i].IsEditComment)
                                                                 {
-                                                                    <a href='#' class="link-editComment active" 
-                                                                       title="edit comment" 
+                                                                    <a href='#' class="link-editComment active"
+                                                                       title="edit comment"
                                                                        onload="myFunction(e)">
                                                                         <span class="commentId hidden">@item.Comments[i].Id</span>
                                                                         <span class="editComment">
@@ -171,7 +171,7 @@
                                             } @* for (int i = 0; i < item.Comments.Count(); i++) *@
 
                                         } @* if (item.Comments.Count != 0) *@
-                                        else
+                                        else if (item.Comments.Count == 0)
                                         {
                                             <div class="noComments">
                                                 <p> No comments yet!</p>
@@ -201,13 +201,13 @@
                                         <a href="@Url.Action("CountLikes", "Image", new { id = item.Id }, null)" id="@item.Id">
                                             <span class="countLikes-js countLikes">@item.CountLikes</span>
                                             @if (item.isLike == true)
-            {
-                                <span class="like-js like active"></span>
-}
-else
-{
-                                <span class="like-js like"></span>
-}
+                                            {
+                                                <span class="like-js like active"></span>
+                                            }
+                                            else
+                                            {
+                                                <span class="like-js like"></span>
+                                            }
 
                                         </a>
                                         <span class="photo-name__title">@Html.DisplayFor(modelItem => item.Name)</span>
@@ -224,12 +224,6 @@ else
 </div>
 
 <script>
-    function myFunction(context) {
-        //var bbb = context.target;
-        setTimeout(function () { alert("Hello"); }, 3000);
-       
-    }
-
     $(document).ready(function () {
         var numberCurrentSlide;
         var countSlides;
@@ -264,7 +258,6 @@ else
         //
 
         $('.new-comment .add-commentBtns__add').click(function (e) {
-        //$('.new-comment .add-commentBtns__add').on('click', 'button',function (e) {
             e.preventDefault();
 
             var nowDate = $(this).parents('.new-comment').find(".add-comment__dateNow").text();
@@ -288,9 +281,8 @@ else
                     'ParentId': 0
                 }
             $(this).parents(".new-comment").find(".add-comment").val("");
-
+            var addCommentBlock = $(this).parents(".new-comment").find(".add-comment");
             var container = $(this).parents('.new-comment').siblings(".comment-wrapper");
-            //var contCommWrapper = $(this).siblings('.comment-wrapper');
 
             $.ajax({
                 type: "POST",
@@ -299,67 +291,73 @@ else
                 contentType: 'application/json',
                 data: JSON.stringify({ comment: objComm }),
                 success: function (data) {
+
                     console.log(data);
-                    var numDateNow = parseInt(data.CommentData.replace(/\D+/g, ""));
-
-                    var dateNow = new Date(numDateNow);
-
-                    var dateToStr = (dateNow.getDate() + "/" + (dateNow.getMonth() + 1) + "/" + dateNow.getFullYear() +
-                                    " " + dateNow.getHours() + ":" + dateNow.getMinutes()).toString();
-                    var currentUserPhoto = "";
-                    if (data.UserPhoto !== "") {
-                        currentUserPhoto = data.UserPhoto;
+                    if (data === "") {
+                        addCommentBlock.addClass("error");
                     }
-                    else if (data.UserPhoto === "") {
-                        currentUserPhoto = "/images/user-icon.png";
-                    }
+                    else {
+                        
+                        var numDateNow = parseInt(data.CommentData.replace(/\D+/g, ""));
 
-                    container.append('<div class="comments-block clearfix">' +
-                        '<div class="comments-block__writer">' +
-                        '<a href="#">' +
-                        '<span class="comments-block__imgUser">' +
-                        '<img src="' + currentUserPhoto + '" alt="" />' +
+                        var dateNow = new Date(numDateNow);
 
-                        '</span>' +
-                        '<span class="comments-block__nameUser">' + data.UserLogin + '</span>' +
-                        '</a>' +
-                        '<div class="delEditCommBlock">' +
-                        '<a href= "#" class="link-editComment active" title="edit comment">' +
-                        '<span class="commentId hidden">' + data.Id + '</span>' +
-                        '<span class="editComment">' +
-                        '<span class="glyphicon glyphicon-pencil"></span>' +
-                        '</span>' +
-                        '</a>' +
-                        '<a href= "#" class="link-delComment" title="delete comment">' +
-                        '<span class="commentId hidden">' + data.Id + '</span>' +
-                        '<span class="delComment">' +
-                        '<span aria-hidden="true">&times;</span>' +
-                        '</span>' +
-                        '</a>' +
-                        '</div>' +
-                        '</div>' +
-                        '<div class="comments-block__content">' +
-                        data.Text +
-                        '</div>' +
-                        '<div class="comments-block__info">' +
-                        '<span class="comments-block__date">' +
-                        dateToStr +
-                        '</span>' +
-                        '<span class="comments-block__answer">' +
-                        '<a href="#" class="comments-block__ansLink">Answer</a>' +
-                        '</span>' +
-                        '</div>' +
-                        '<hr />' +
-                        '</div>');
+                        var dateToStr = (dateNow.getDate() + "/" + (dateNow.getMonth() + 1) + "/" + dateNow.getFullYear() +
+                            " " + dateNow.getHours() + ":" + dateNow.getMinutes()).toString();
+                        var currentUserPhoto = "";
+                        if (data.UserPhoto !== "") {
+                            currentUserPhoto = data.UserPhoto;
+                        }
+                        else if (data.UserPhoto === "") {
+                            currentUserPhoto = "/images/user-icon.png";
+                        }
+                        $(".noComments").css("display","none");
+                        container.append('<div class="comments-block clearfix">' +
+                            '<div class="comments-block__writer">' +
+                            '<a href="#">' +
+                            '<span class="comments-block__imgUser">' +
+                            '<img src="' + currentUserPhoto.slice(1) + '" alt="" />' +
+                            '</span>' +
+                            '<span class="comments-block__nameUser">' + data.UserLogin + '</span>' +
+                            '</a>' +
+                            '<div class="delEditCommBlock">' +
+                            '<a href= "#" class="link-editComment active" title="edit comment">' +
+                            '<span class="commentId hidden">' + data.Id + '</span>' +
+                            '<span class="editComment">' +
+                            '<span class="glyphicon glyphicon-pencil"></span>' +
+                            '</span>' +
+                            '</a>' +
+                            '<a href= "#" class="link-delComment" title="delete comment">' +
+                            '<span class="commentId hidden">' + data.Id + '</span>' +
+                            '<span class="delComment">' +
+                            '<span aria-hidden="true">&times;</span>' +
+                            '</span>' +
+                            '</a>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="comments-block__content">' +
+                            data.Text +
+                            '</div>' +
+                            '<div class="comments-block__info">' +
+                            '<span class="comments-block__date">' +
+                            dateToStr +
+                            '</span>' +
+                            '<span class="comments-block__answer">' +
+                            '<a href="#" class="comments-block__ansLink">Answer</a>' +
+                            '</span>' +
+                            '</div>' +
+                            '<hr />' +
+                            '</div>');
+                        data = "";
+                        var lastCommBlock = container.find('.comments-block').last();
+                        var delElActive = lastCommBlock.find('.link-editComment');
+                        if (delElActive.hasClass('active')) {
+                            setTimeout(function () {
+                                delElActive.removeClass('active');
 
-                    var lastCommBlock = container.find('.comments-block').last();
-                    var delElActive = lastCommBlock.find('.link-editComment');//.removeClass('.active');
-                    if (delElActive.hasClass('active')) {
-                        setTimeout(function () {
-                            delElActive.removeClass('active');
+                            }, 120000);
 
-                        }, 3000);
-
+                        }
                     }
 
                 },
@@ -383,6 +381,7 @@ else
                 data: { id: delCommId },
                 success: function (data) {
                     commentBlock.css('display', 'none'); // comments-block
+                    data = "";
                 },
                 failure: function (errMsg) {
                     alert(errMsg);
@@ -392,19 +391,27 @@ else
 
         $("body").on("click", ".editComment", function (e) {
             e.preventDefault();
-            alert("EDIT!!!!" + e.preventDefault());
+
             var valId = $(this).siblings().text();
             var delCommId = parseInt(valId);
-            var commentBlock = ($(this).parents('.comments-block')); // comments-block
-
+            var commentBlock = $(this).parents(".comments-block").find(".comments-block__content"); 
+            var editCommObg = null;
             $.ajax({
                 type: "GET",
-                url: "/Comment/EditCimment",
+                url: "/Comment/EditComment",
                 dataType: 'json',
                 contentType: 'application/json',
-                data: { id: delCommId },
+                data: {
+                    id: delCommId
+                },
                 success: function (data) {
-                    commentBlock.css('display', 'none'); // comments-block
+                    console.log(data);
+                    commentBlock.replaceWith("<div class='editCommBlock'><span class='hidden commId'>" + data.Id + "</span>" +
+                        "<textarea class='editComm'>" + data.Text + "</textarea>" +
+                        "<button class='cancelEditBtn'>Cancel</button>" +
+                        "<button type='submit' class='editCommBtn'>Edit comment</button>" + "</div>");
+
+                    data = "";
                 },
                 failure: function (errMsg) {
                     alert(errMsg);
@@ -412,6 +419,60 @@ else
             });
         });
 
+        $("body").on("click", ".editCommBtn", function (e) {
+            e.preventDefault();
+
+            var commBlock = $(this).parents(".comments-block");
+
+            var commIdtxt = commBlock.find(".commId").text();
+            var commId = parseInt(commIdtxt);
+            var userLogin = commBlock.find(".comments-block__nameUser").text();
+            var commDate = commBlock.find(".comments-block__date");
+            var editComm = commBlock.find(".editComm").val();
+            var setNewComment = $(this).parents(".comments-block").find(".editCommBlock");
+
+            objComm = {
+                Id: commId,
+                UserLogin: userLogin,
+                Text: editComm
+            }
+            $.ajax({
+                type: "POST",
+                url: "/Comment/UpdateComment",
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({ updateComment: objComm }),
+                success: function (data) {
+                    console.log(data);
+                    setNewComment.replaceWith('<div class="comments-block__content">' +
+                        data.Text + '</div>');
+                    var numDateNow = parseInt(data.CommentData.replace(/\D+/g, ""));
+
+                    var dateNow = new Date(numDateNow);
+
+                    var dateToStr = (dateNow.getDate() + "/" + (dateNow.getMonth() + 1) + "/" + dateNow.getFullYear() +
+                        " " + dateNow.getHours() + ":" + dateNow.getMinutes()).toString();
+                    commDate.text(dateToStr);
+                    data = "";
+                    editComm = "";
+                    
+                },
+                failure: function (errMsg) {
+                    alert(errMsg);
+                }
+            });
+        });
+
+        $("body").on("click", ".cancelEditBtn", function (e) {
+            e.preventDefault();
+            var setNewComment = $(this).parents(".comments-block").find(".editCommBlock");
+            var currTxt = $(this).parents(".comments-block").find(".editComm").val();
+            setNewComment.replaceWith('<div class="comments-block__content">' +
+                currTxt + '</div>');
+            currTxt = "";
+            
+
+        });
 
 
     });

@@ -103,7 +103,8 @@ input[type="file"], .myControl {
     text-transform: uppercase;
     letter-spacing: 2px;
 }
-    .mySuccess-login:hover {
+    .mySuccess-login:hover, 
+    .mySuccess-login:active{
         background-color: white;
         color: lightseagreen;
         border-color: lightseagreen;
@@ -610,7 +611,7 @@ a.bx-next {
     right: 0;
     width: 28%;
     display: inline-block;
-    padding: 5px 0 5px 10px;
+    padding: 5px 5px 5px 10px;
     background: white;
     height: 500px;
     border-radius: 3px;
@@ -620,7 +621,7 @@ a.bx-next {
 .comment-wrapper {
     height: 408px;
     overflow-y: auto;
-    padding-right: 3px;
+    padding-right: 0px;
 }
 .comments-block__imgUser {
     width: 20px !important;
@@ -647,6 +648,7 @@ a.bx-next {
         color: black;
     }
 .comments-block__content {
+    padding-top: 5px;
     font-size: 13px;
 }
 .comments-block__info {
@@ -682,6 +684,39 @@ a.bx-next {
 .link-editComment {
     display: none;
 }
+.editCommBlock{
+    text-align:right;
+}
+.editCommBtn {
+    display: inline-block;
+    padding: 3px 10px;
+    background-color: forestgreen;
+    border: 1px solid forestgreen;
+    color: white;
+    border-radius: 3px;
+    font-size: 13px;
+    transition: all .4s ease;
+}
+    .editCommBtn:hover {
+        background-color: white;
+        border: 1px solid forestgreen;
+        color: forestgreen;
+    }
+.cancelEditBtn {
+    margin-right: 5px;
+    display: inline-block;
+    padding: 3px 10px;
+    background-color: grey;
+    border: 1px solid grey;
+    color: white;
+    border-radius: 3px;
+    font-size: 13px;
+}
+    .cancelEditBtn:hover {
+        background-color: white;
+        border: 1px solid grey;
+        color: grey;
+    }
 .link-editComment.active {
     display: block;
 }
@@ -696,7 +731,7 @@ a.bx-next {
     color: gray;
 }
 .new-comment {
-    width: 94%;
+    width: 95%;
     bottom: 10px;
     position: absolute;
 }
@@ -708,6 +743,12 @@ a.bx-next {
     border-radius: 3px;
     resize: none;
     font-size: 13px;
+}
+.error {
+    border: 1px solid red;
+}
+.add-comment.error::-webkit-input-placeholder {
+    color: red;
 }
 .add-commentBtns{
     text-align: right;
@@ -749,6 +790,25 @@ a.bx-next {
     text-align: center;
     font-size: 14px;
 }
+.editComm {
+    width: 100%;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 3px;
+    margin: 5px 0px 5px 0;
+    max-width: 100%;
+    height: 51px;
+    resize: none;
+}
+
+.link-editComment.active{
+    display: inline-block;
+    padding-right: 3px;
+}
+.link-delComment{
+    display: inline-block;
+    padding-left: 3px;
+}
+
 .like:before {
     content: "\f004";
     font-family: "FontAwesome";

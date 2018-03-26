@@ -31,7 +31,13 @@ namespace Gallery.DAL.RepositoryClasses
 
         public void UpdateComment(Comment comment)
         {
-            var sql = "UPDATE Comments SET UserId = @UserId, ImageId = @ImageId, Text = @Text, CommentData = @CommentData, ParentId = @ParentId WHERE Id = @Id and UserId = @UserId";
+            var sql = @"UPDATE Comments SET 
+                        UserId = @UserId, 
+                        ImageId = @ImageId, 
+                        Text = @Text, 
+                        CommentData = @CommentData, 
+                        ParentId = @ParentId 
+                        WHERE Id = @Id and UserId = @UserId";
             connection.Execute(sql, comment);
         }
 
@@ -42,11 +48,18 @@ namespace Gallery.DAL.RepositoryClasses
             return listComments;
         }
 
-        public Comment Get(long ImageId)
+        public Comment GetLastAddedComment(long commId)
         {
-            var sql = @"SELECT *  FROM Comments
+            var sql = @"SELECT * FROM Comments
                       where Id = (select max(Id) from Comments)";
-            Comment comm = connection.Query<Comment>(sql, new { ImageId }).FirstOrDefault();
+            Comment comm = connection.Query<Comment>(sql, new { commId }).FirstOrDefault();
+            return comm;
+        }
+        public Comment Get(long CommId)
+        {
+            var sql = @"SELECT * FROM Comments
+                      where Id = @CommId";
+            Comment comm = connection.Query<Comment>(sql, new { CommId }).FirstOrDefault();
             return comm;
         }
     }
