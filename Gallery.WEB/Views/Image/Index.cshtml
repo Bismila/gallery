@@ -22,7 +22,8 @@
                     <div class="hidden">@Html.DisplayFor(modelItem => item.UserId)</div>
                     <div class="hidden">@Html.DisplayFor(modelItem => item.Name)</div>
                     <div class="imgs-block__img">
-                        <img src=" @Html.DisplayFor(modelItem => item.PathImage)" />
+                        @*<img src=" @Html.DisplayFor(modelItem => item.PathImage)" />*@
+                        <img src='@Url.Content(@item.PathImage)' />
                     </div>
                     <div>
                         @Html.DisplayFor(modelItem => item.Name)

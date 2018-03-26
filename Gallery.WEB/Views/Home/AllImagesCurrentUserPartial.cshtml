@@ -255,8 +255,6 @@
 
         clickLikeForCurrentUserPage(slider, countSlides);
 
-        //
-
         $('.new-comment .add-commentBtns__add').click(function (e) {
             e.preventDefault();
 
@@ -434,7 +432,8 @@
             objComm = {
                 Id: commId,
                 UserLogin: userLogin,
-                Text: editComm
+                Text: editComm,
+                CommentData: commDate
             }
             $.ajax({
                 type: "POST",
@@ -448,11 +447,11 @@
                         data.Text + '</div>');
                     var numDateNow = parseInt(data.CommentData.replace(/\D+/g, ""));
 
-                    var dateNow = new Date(numDateNow);
+                    //var dateNow = new Date(numDateNow);
 
-                    var dateToStr = (dateNow.getDate() + "/" + (dateNow.getMonth() + 1) + "/" + dateNow.getFullYear() +
-                        " " + dateNow.getHours() + ":" + dateNow.getMinutes()).toString();
-                    commDate.text(dateToStr);
+                    //var dateToStr = (dateNow.getDate() + "/" + (dateNow.getMonth() + 1) + "/" + dateNow.getFullYear() +
+                    //    " " + dateNow.getHours() + ":" + dateNow.getMinutes()).toString();
+                    //commDate.text(dateToStr);
                     data = "";
                     editComm = "";
                     
