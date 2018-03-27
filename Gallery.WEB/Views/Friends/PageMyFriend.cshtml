@@ -104,17 +104,12 @@
                                                                 <a href='#' class="link-editComment active"
                                                                    title="edit comment"
                                                                    onload="myFunction(e)">
-                                                                    <span class="commentId ">@Model.Images[i].Comments[j].Id</span>
+                                                                    <span class="commentId hidden">@Model.Images[i].Comments[j].Id</span>
                                                                     <span class="editComment">
                                                                         <span class="glyphicon glyphicon-pencil"></span>
                                                                     </span>
                                                                 </a>
-                                                                <a href='#' class="link-delComment" title="delete comment">
-                                                                    <span class="commentId hidden">@Model.Images[i].Comments[j].Id</span>
-                                                                    <span class="delComment">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </span>
-                                                                </a>
+                                                               
                                                             }
                                                             else
                                                             {
@@ -385,6 +380,101 @@
                 }
             });
         });
+
+          $("body").on("click", ".editComment", function (e) {
+            e.preventDefault();
+
+            var valId = $(this).siblings().text();
+            var delCommId = parseInt(valId);
+            var commentBlock = $(this).parents(".comments-block").find(".comments-block__content");
+
+            var editCommObg = null;
+            $.ajax({
+                type: "GET",
+                url: "/Comment/EditComment",
+                dataType: 'json',
+                contentType: 'application/json',
+                data: {
+                    id: delCommId
+                },
+                success: function (data) {
+                    console.log(data);
+                    commentBlock.replaceWith("<div class='editCommBlock'><span class='hidden commId'>" + data.Id + "</span>" +
+                        "<textarea class='editComm'>" + data.Text + "</textarea>" +
+                        "<button class='cancelEditBtn'>Cancel</button>" +
+                        "<button type='submit' class='editCommBtn'>Edit comment</button>" + "</div>");
+
+                    data = "";
+                },
+                failure: function (errMsg) {
+                    alert(errMsg);
+                }
+            });
+        });
+
+        $("body").on("click", ".editCommBtn", function (e) {
+            e.preventDefault();
+            var dateNow = new Date($.now());
+
+            var commBlock = $(this).parents(".comments-block");
+
+            var commIdtxt = commBlock.find(".commId").text();
+            var commId = parseInt(commIdtxt);
+            var userLogin = commBlock.find(".comments-block__nameUser").text();
+            var blockSetDateEditComment = commBlock.find(".comments-block__date");
+            var commDate = dateNow;
+            var editComm = commBlock.find(".editComm").val();
+            var setNewComment = $(this).parents(".comments-block").find(".editCommBlock");
+
+            objComm = {
+                Id: commId,
+                UserLogin: userLogin,
+                Text: editComm,
+                CommentData: commDate
+            }
+            $.ajax({
+                type: "POST",
+                url: "/Comment/UpdateComment",
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({ updateComment: objComm }),
+                success: function (data) {
+                    var numDateNow = parseInt(data.CommentData.replace(/\D+/g, ""));
+                    var dateNow = new Date(numDateNow);
+                    var dateToStr = (dateNow.getDate() + "/" + (dateNow.getMonth() + 1) + "/" + dateNow.getFullYear() +
+                        " " + dateNow.getHours() + ":" + dateNow.getMinutes()).toString();
+
+                    setNewComment.replaceWith('<div class="comments-block__content">' +
+                        data.Text + '</div>');
+                    blockSetDateEditComment.text(dateToStr);
+
+                    data = "";
+                    editComm = "";
+
+                },
+                failure: function (errMsg) {
+                    alert(errMsg);
+                }
+            });
+        });
+
+        $("body").on("click", ".cancelEditBtn", function (e) {
+            e.preventDefault();
+            var setNewComment = $(this).parents(".comments-block").find(".editCommBlock");
+            var currTxt = $(this).parents(".comments-block").find(".editComm").val();
+            setNewComment.replaceWith('<div class="comments-block__content">' +
+                currTxt + '</div>');
+            currTxt = "";
+
+
+        });
+
+        $("body").on("click", ".comments-block__ansLink", function (e) {
+            var whom = $(this).parents(".comments-block").find(".comments-block__nameUser");
+            var who = @Html.Raw(Json.Encode(this.ViewBag.UserLogin));
+            alert("answer" + "кому " + whom.text() + "; кто " + who);
+        });
+
 
     });
 </script>
