@@ -295,7 +295,7 @@
                         addCommentBlock.addClass("error");
                     }
                     else {
-                        
+
                         var numDateNow = parseInt(data.CommentData.replace(/\D+/g, ""));
 
                         var dateNow = new Date(numDateNow);
@@ -392,7 +392,8 @@
 
             var valId = $(this).siblings().text();
             var delCommId = parseInt(valId);
-            var commentBlock = $(this).parents(".comments-block").find(".comments-block__content"); 
+            var commentBlock = $(this).parents(".comments-block").find(".comments-block__content");
+
             var editCommObg = null;
             $.ajax({
                 type: "GET",
@@ -419,13 +420,15 @@
 
         $("body").on("click", ".editCommBtn", function (e) {
             e.preventDefault();
+            var dateNow = new Date($.now());
 
             var commBlock = $(this).parents(".comments-block");
 
             var commIdtxt = commBlock.find(".commId").text();
             var commId = parseInt(commIdtxt);
             var userLogin = commBlock.find(".comments-block__nameUser").text();
-            var commDate = commBlock.find(".comments-block__date");
+            var blockSetDateEditComment = commBlock.find(".comments-block__date");
+            var commDate = dateNow;
             var editComm = commBlock.find(".editComm").val();
             var setNewComment = $(this).parents(".comments-block").find(".editCommBlock");
 
@@ -442,19 +445,18 @@
                 contentType: 'application/json',
                 data: JSON.stringify({ updateComment: objComm }),
                 success: function (data) {
-                    console.log(data);
+                    var numDateNow = parseInt(data.CommentData.replace(/\D+/g, ""));
+                    var dateNow = new Date(numDateNow);
+                    var dateToStr = (dateNow.getDate() + "/" + (dateNow.getMonth() + 1) + "/" + dateNow.getFullYear() +
+                        " " + dateNow.getHours() + ":" + dateNow.getMinutes()).toString();
+
                     setNewComment.replaceWith('<div class="comments-block__content">' +
                         data.Text + '</div>');
-                    var numDateNow = parseInt(data.CommentData.replace(/\D+/g, ""));
+                    blockSetDateEditComment.text(dateToStr);
 
-                    //var dateNow = new Date(numDateNow);
-
-                    //var dateToStr = (dateNow.getDate() + "/" + (dateNow.getMonth() + 1) + "/" + dateNow.getFullYear() +
-                    //    " " + dateNow.getHours() + ":" + dateNow.getMinutes()).toString();
-                    //commDate.text(dateToStr);
                     data = "";
                     editComm = "";
-                    
+
                 },
                 failure: function (errMsg) {
                     alert(errMsg);
@@ -469,7 +471,7 @@
             setNewComment.replaceWith('<div class="comments-block__content">' +
                 currTxt + '</div>');
             currTxt = "";
-            
+
 
         });
 

@@ -70,6 +70,7 @@ namespace Gallery.WEB.Controllers
             else if (currComm.Text != updateComment.Text)
             {
                 currComm.Text = updateComment.Text;
+                currComm.CommentData = updateComment.CommentData;
                 commentService.UpdateComment(currComm);
                 return Json(updateComment, JsonRequestBehavior.AllowGet);
             }
