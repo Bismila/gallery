@@ -64,7 +64,7 @@ namespace Gallery.BAL.Services
                     ParentId = comment.ParentId,
                     UserId = comment.UserId,
                     Text = comment.Text,
-                    CommentData = DateTime.Now,
+                    CommentData = comment.CommentData,
                 };
                 commentRepository.UpdateComment(item);
             }
