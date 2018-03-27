@@ -37,7 +37,11 @@ namespace Gallery.WEB.Models
         public int RoleId { get; set; }
 
         public List<CreateUpdateDto> Images { get; set; }
+
+        //public List<CommentDTO> Comments { get; set; }
+
         public List<Friend> Friends { get; set; }
+
         public List<Role> Roles { get; set; }
 
         public UserViewModel()
@@ -45,6 +49,8 @@ namespace Gallery.WEB.Models
             Images = new List<CreateUpdateDto>();
             Friends = new List<Friend>();
             Roles = new List<Role>();
+            //Comments = new List<CommentDTO>();
+
         }
     }
 }

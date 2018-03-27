@@ -124,4 +124,6 @@ $(document).ready(function () {
     $('body').keypress(keypressHandler);
     //search friends and users end
 
+
+
 });

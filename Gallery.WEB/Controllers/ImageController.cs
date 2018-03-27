@@ -16,16 +16,19 @@ namespace Gallery.WEB.Controllers
         private readonly IUserService userService;
         private readonly IFileService fileService;
         private readonly ILikeService likeService;
+        private readonly ICommentService commentService;
 
         public ImageController(IImageService _imageService,
                                 IFileService _fileService,
                                 IUserService _userService,
-                                ILikeService _likeService)
+                                ILikeService _likeService,
+                                ICommentService _commentService)
         {
             imageService = _imageService;
             fileService = _fileService;
             userService = _userService;
             likeService = _likeService;
+            commentService = _commentService;
         }
 
         // GET: Image
@@ -52,7 +55,8 @@ namespace Gallery.WEB.Controllers
                 PathImage = x.PathImage,
                 UserId = (int)x.UserId,
                 CountLikes = likeService.CountLikes(x.Id),
-                isLike = likeService.IsLike(x.Id, currentUser.Id)
+                isLike = likeService.IsLike(x.Id, currentUser.Id),
+                Comments = commentService.GetAllCommentsForImage(x.Id).ToList()
             }));
 
             if (allImage.Count() == 0)
@@ -70,7 +74,8 @@ namespace Gallery.WEB.Controllers
                     PathImage = x.PathImage,
                     UserId = (int)x.UserId,
                     CountLikes = likeService.CountLikes(x.Id),
-                    isLike = likeService.IsLike(x.Id, currentUser.Id)
+                    isLike = likeService.IsLike(x.Id, currentUser.Id),
+                    Comments = commentService.GetAllCommentsForImage(x.Id).ToList()
                 }));
             }
         }
@@ -135,7 +140,8 @@ namespace Gallery.WEB.Controllers
                     PathImage = image.PathImage,
                     UserName = currentUser.Login,
                     CountLikes = likeService.CountLikes(image.Id),
-                    isLike = likeService.IsLike(image.Id, currentUser.Id)
+                    isLike = likeService.IsLike(image.Id, currentUser.Id),
+                    Comments = commentService.GetAllCommentsForImage(image.Id).ToList()
                 });
             }
             return RedirectToAction("Index", "Home");
@@ -145,6 +151,7 @@ namespace Gallery.WEB.Controllers
         public ActionResult DeleteImage(int id)
         {
             var currentImg = imageService.Get(id);
+            
             var currentUser = userService.GetCurrentUser(User.Identity.Name);
             imageService.Delete(id);
             fileService.DeleteFile(System.Web.HttpContext.Current.Server.MapPath(currentImg.PathImage), currentUser.Id);
@@ -163,7 +170,8 @@ namespace Gallery.WEB.Controllers
                     ImageDate = image.ImageDate,
                     PathImage = image.PathImage,
                     CountLikes = likeService.CountLikes(image.Id),
-                    isLike = likeService.IsLike(image.Id, currentUser.Id)
+                    isLike = likeService.IsLike(image.Id, currentUser.Id),
+                    Comments = commentService.GetAllCommentsForImage(image.Id).ToList()
                 });
             return HttpNotFound();
         }
@@ -202,7 +210,8 @@ namespace Gallery.WEB.Controllers
                         UserName = currentUser.Login,
                         UserId = currentUser.Id,
                         CountLikes = likeService.CountLikes(elem.Id),
-                        isLike = likeService.IsLike(elem.Id, currentUser.Id)
+                        isLike = likeService.IsLike(elem.Id, currentUser.Id),
+                        Comments = commentService.GetAllCommentsForImage(elem.Id).ToList()
                     });
                 }
                 else
@@ -220,7 +229,8 @@ namespace Gallery.WEB.Controllers
                         UserName = currentUser.Login,
                         UserId = currentUser.Id,
                         CountLikes = likeService.CountLikes(elem.Id),
-                        isLike = likeService.IsLike(elem.Id, currentUser.Id)
+                        isLike = likeService.IsLike(elem.Id, currentUser.Id),
+                        Comments = commentService.GetAllCommentsForImage(elem.Id).ToList()
                     });
                 }
             }

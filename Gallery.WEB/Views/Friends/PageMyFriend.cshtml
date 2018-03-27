@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Page My Friend";
     ViewBag.PhotoUserUrlDefault = "/images/user-icon.png";
-
+    ViewBag.UserLogin = HttpContext.Current.User.Identity.Name;
 }
 <div class="row">
     <div class="col-md-12">
@@ -61,7 +61,7 @@
         </div>
 
         <div class="show-slider">
-            <h2 class="closeSlider">X</h2>
+            <h2 class="closeSlider"><span aria-hidden="true">&times;</span></h2>
             <div id="friendsSlider">
 
                 @for (int i = 0; i < Model.Images.Count; i++)
@@ -71,26 +71,143 @@
                         <div class="hidden">@Html.DisplayFor(modelItem => Model.Images[i].Id)</div>
                         <div class="hidden">@Html.DisplayFor(modelItem => Model.Images[i].User.Id)</div>
 
-                        <div class="imgs-slide__img">
-                            @*<img src=" @Html.DisplayFor(modelItem => Model.Images[i].PathImage)" />*@
-                            <img src='@Url.Content(Model.Images[i].PathImage)' />
-                        </div>
-                        <div class="photo-name">
-                            <a href="@Url.Action("CountLikes", "Image", new { id = Model.Images[i].Id }, null)" id="@Model.Images[i].Id">
-                                <span class="countLikes-js countLikes font-count">@Model.Images[i].CountLikes</span>
+                        <div class="imgs-slide__img container">
+                            <div class="comments clearfix">
+                                <div class="comment-wrapper">
+                                    @if (Model.Images[i].Comments.Count > 0)
+                                    {
+                                        for (int j = 0; j < Model.Images[i].Comments.Count(); j++)
+                                        {
+                                            <div class="comments-block clearfix">
+                                                <div class="comments-block__writer">
+                                                    <a href="#">
+                                                        <span class="comments-block__imgUser">
+                                                            @if (!string.IsNullOrWhiteSpace(Model.Images[i].Comments[j].UserPhoto))
+                                                            {
+                                                                @*<img src="@item.Comments[i].UserPhoto" alt="" />*@
+                                                                <img src='@Url.Content(Model.Images[i].Comments[j].UserPhoto)' />
+                                                                ViewBag.UserPhoto = Model.Images[i].Comments[j].UserPhoto;
+                                                            }
+                                                            else
+                                                            {
+                                                                <img src="@ViewBag.PhotoUserUrlDefault" alt="" />
 
-                                @if (Model.Images[i].isLike == true)
-                                {
-                                    <span class="like-js like active"></span>
-                                }
-                                else
-                                {
-                                    <span class="like-js like"></span>
-                                }
+                                                            }
+                                                        </span>
+                                                        <span class="comments-block__nameUser">@Model.Images[i].Comments[j].UserLogin</span>
+                                                    </a>
+                                                    @if (ViewBag.UserLogin == Model.Images[i].Comments[j].UserLogin)
+                                                    {
+                                                        <div class="delEditCommBlock">
+                                                            @if (Model.Images[i].Comments[j].IsEditComment)
+                                                            {
+                                                                <a href='#' class="link-editComment active"
+                                                                   title="edit comment"
+                                                                   onload="myFunction(e)">
+                                                                    <span class="commentId ">@Model.Images[i].Comments[j].Id</span>
+                                                                    <span class="editComment">
+                                                                        <span class="glyphicon glyphicon-pencil"></span>
+                                                                    </span>
+                                                                </a>
+                                                                <a href='#' class="link-delComment" title="delete comment">
+                                                                    <span class="commentId hidden">@Model.Images[i].Comments[j].Id</span>
+                                                                    <span class="delComment">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </span>
+                                                                </a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a href='#' class="link-editComment" title="edit comment" onload="">
+                                                                    <span class="commentId hidden">@Model.Images[i].Comments[j].Id</span>
+                                                                    <span class="editComment">
+                                                                        <span class="glyphicon glyphicon-pencil"></span>
+                                                                    </span>
+                                                                </a>
+                                                            }
 
-                            </a>
-                            <span class="photo-name__title">@Html.DisplayFor(modelItem => Model.Images[i].Name)</span>
+                                                            <a href='#' class="link-delComment" title="delete comment">
+                                                                <span class="commentId hidden">@Model.Images[i].Comments[j].Id</span>
+                                                                <span class="delComment">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </span>
+                                                            </a>
+                                                        </div>
 
+                                                    }
+                                                    else
+                                                    {
+                                                        @*<div class="delEditCommBlock">
+                                                            <a href="#" class="link-delComment" title="сomplain">
+                                                                <span class="delComment">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </span>
+                                                            </a>
+                                                        </div>*@
+                                                    }
+                                                </div>
+                                                <div class="comments-block__content">
+                                                    @Model.Images[i].Comments[j].Text
+                                                </div>
+                                                <div class="comments-block__info">
+                                                    <span class="comments-block__date">
+                                                        @Model.Images[i].Comments[j].CommentData
+                                                    </span>
+                                                    <span class="comments-block__answer">
+                                                        <a href="#" class="comments-block__ansLink">Answer</a>
+                                                    </span>
+                                                </div>
+                                                <hr />
+                                            </div>
+
+                                        } @* for (int i = 0; i < item.Comments.Count(); i++) *@
+
+                                    } @* if (item.Comments.Count != 0) *@
+                                    else if (Model.Images[i].Comments.Count == 0)
+                                    {
+                                        <div class="noComments">
+                                            <p> No comments yet!</p>
+                                            <p> Be first...</p>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="new-comment">
+                                    <span class="hidden">@Model.Images[i].Id, @ViewBag.UserLogin</span>
+                                    <textarea class="add-comment"
+                                              placeholder="Enter your comment, please..."
+                                              name="textComment"></textarea>
+                                    <div class="hidden add-comment__dateNow">@DateTime.Now</div>
+                                    <div class="add-commentBtns">
+                                        <button type="reset" class="add-commentBtns__cancel">Cancel</button>
+                                        <button type="submit" class="add-commentBtns__add">Add</button>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="imgs-blockImg ">
+                                @*<img src=" @Html.DisplayFor(modelItem => Model.Images[i].PathImage)" />*@
+                                <img src='@Url.Content(Model.Images[i].PathImage)' />
+                                <div class="photo-name">
+                                    <a href="@Url.Action("CountLikes", "Image", new { id = Model.Images[i].Id }, null)" id="@Model.Images[i].Id">
+                                        <span class="countLikes-js countLikes font-count">@Model.Images[i].CountLikes</span>
+
+                                        @if (Model.Images[i].isLike == true)
+                                        {
+                                            <span class="like-js like active"></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="like-js like"></span>
+                                        }
+
+                                    </a>
+                                    <span class="photo-name__title">@Html.DisplayFor(modelItem => Model.Images[i].Name)</span>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 }
@@ -124,6 +241,9 @@
             e.preventDefault();
             numberCurrentSlide = $(this).data("slide-index");
             friendsSlider.goToSlide(numberCurrentSlide);
+            if ($(".bx-slider img").height > '385px') {
+                $(".bx-wrapper img").css("height", "385px");
+            }
             $('.show-slider').addClass('active');
         });
 
@@ -132,9 +252,140 @@
             $('.show-slider').removeClass('active');
         });
 
-
-
         clickLikeCurrentUserForFriendsPage(friendsSlider, countSlidesFr);
+
+
+        $('.new-comment .add-commentBtns__add').click(function (e) {
+            e.preventDefault();
+            var nowDate = $(this).parents('.new-comment').find(".add-comment__dateNow").text();
+            var d = Date.now;
+            var valId = ($(this).parent().siblings().text());
+
+            var imgId = parseInt(valId);
+            var userId = 0;
+            var userLogin = @Html.Raw(Json.Encode(this.ViewBag.UserLogin));
+            var userPhoto ="";
+            var txtComm = $(this).parents(".new-comment").find(".add-comment").val();
+
+            var objComm =
+                {
+                    'UserId': userId,
+                    'UserLogin': userLogin,
+                    'UserPhoto': userPhoto,
+                    'ImageId': imgId,
+                    'Text': txtComm,
+                    'CommentData': nowDate,
+                    'ParentId': 0
+                }
+            $(this).parents(".new-comment").find(".add-comment").val("");
+            var addCommentBlock = $(this).parents(".new-comment").find(".add-comment");
+            var container = $(this).parents('.new-comment').siblings(".comment-wrapper");
+
+            $.ajax({
+                type: "POST",
+                url: "/Comment/AddComment",
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({ comment: objComm }),
+                success: function (data) {
+
+                    console.log(data);
+                    if (data === "") {
+                        addCommentBlock.addClass("error");
+                    }
+                    else {
+
+                        var numDateNow = parseInt(data.CommentData.replace(/\D+/g, ""));
+
+                        var dateNow = new Date(numDateNow);
+
+                        var dateToStr = (dateNow.getDate() + "/" + (dateNow.getMonth() + 1) + "/" + dateNow.getFullYear() +
+                            " " + dateNow.getHours() + ":" + dateNow.getMinutes()).toString();
+                        var currentUserPhoto = "";
+                        if (data.UserPhoto !== "") {
+                            currentUserPhoto = data.UserPhoto;
+                        }
+                        else if (data.UserPhoto === "") {
+                            currentUserPhoto = "/images/user-icon.png";
+                        }
+                        $(".noComments").css("display","none");
+                        container.append('<div class="comments-block clearfix">' +
+                            '<div class="comments-block__writer">' +
+                            '<a href="#">' +
+                            '<span class="comments-block__imgUser">' +
+                            '<img src="' + currentUserPhoto.slice(1) + '" alt="" />' +
+                            '</span>' +
+                            '<span class="comments-block__nameUser">' + data.UserLogin + '</span>' +
+                            '</a>' +
+                            '<div class="delEditCommBlock">' +
+                            '<a href= "#" class="link-editComment active" title="edit comment">' +
+                            '<span class="commentId hidden">' + data.Id + '</span>' +
+                            '<span class="editComment">' +
+                            '<span class="glyphicon glyphicon-pencil"></span>' +
+                            '</span>' +
+                            '</a>' +
+                            '<a href= "#" class="link-delComment" title="delete comment">' +
+                            '<span class="commentId hidden">' + data.Id + '</span>' +
+                            '<span class="delComment">' +
+                            '<span aria-hidden="true">&times;</span>' +
+                            '</span>' +
+                            '</a>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="comments-block__content">' +
+                            data.Text +
+                            '</div>' +
+                            '<div class="comments-block__info">' +
+                            '<span class="comments-block__date">' +
+                            dateToStr +
+                            '</span>' +
+                            '<span class="comments-block__answer">' +
+                            '<a href="#" class="comments-block__ansLink">Answer</a>' +
+                            '</span>' +
+                            '</div>' +
+                            '<hr />' +
+                            '</div>');
+                        data = "";
+                        var lastCommBlock = container.find('.comments-block').last();
+                        var delElActive = lastCommBlock.find('.link-editComment');
+                        if (delElActive.hasClass('active')) {
+                            setTimeout(function () {
+                                delElActive.removeClass('active');
+
+                            }, 120000);
+
+                        }
+                    }
+
+                },
+                failure: function (errMsg) {
+                    alert(errMsg);
+                }
+            });
+        });
+
+        $("body").on("click", ".link-delComment .delComment", function (e) {
+            e.preventDefault();
+            var valId = $(this).siblings().text();
+            var delCommId = parseInt(valId);
+            var commentBlock = ($(this).parents('.comments-block')); // comments-block
+
+            $.ajax({
+                type: "GET",
+                url: "/Comment/DelComment",
+                dataType: 'json',
+                contentType: 'application/json',
+                data: { id: delCommId },
+                success: function (data) {
+                    commentBlock.css('display', 'none'); // comments-block
+                    data = "";
+                },
+                failure: function (errMsg) {
+                    alert(errMsg);
+                }
+            });
+        });
+
     });
 </script>
 

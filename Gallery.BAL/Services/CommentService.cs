@@ -24,6 +24,7 @@ namespace Gallery.BAL.Services
         public CommentDTO AddComment(CommentDTO comment)
         {
             var currUser = userRepository.GetCurrentUser(comment.UserLogin);
+
             commentRepository.AddComment(new Comment
             {
                 ImageId = comment.ImageId,
@@ -55,6 +56,11 @@ namespace Gallery.BAL.Services
         public void UpdateComment(CommentDTO comment)
         {
             var comm = commentRepository.Get(comment.Id);
+            if (comment.UserId == null)
+            {
+                var currUser = userRepository.GetCurrentUser(comment.UserLogin);
+                comment.UserId = currUser.Id;
+            }
             if (!comment.Text.Equals(comm.Text))
             {
                 var item = new Comment

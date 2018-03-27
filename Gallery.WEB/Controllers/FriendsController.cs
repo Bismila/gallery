@@ -16,16 +16,19 @@ namespace Gallery.WEB.Controllers
         private readonly IFriendService friendService;
         private readonly IImageService imageService;
         private readonly ILikeService likeService;
+        private readonly ICommentService commentService;
 
         public FriendsController(IUserService userService, 
                                  IFriendService friendService,
                                  IImageService imageService,
-                                 ILikeService likeService)
+                                 ILikeService likeService,
+                                 ICommentService commentService)
         {
             this.userService = userService;
             this.imageService = imageService;
             this.friendService = friendService;
             this.likeService = likeService;
+            this.commentService = commentService;
         }
 
         // GET: all users and Friends (search all users and friend on enter)
@@ -42,7 +45,7 @@ namespace Gallery.WEB.Controllers
                 Name = x.Name,
                 Login = x.Login,
                 PhotoUser = x.PhotoUser,
-                Friends = x.Friends
+                Friends = x.Friends,
             }));
         }
 
@@ -166,7 +169,8 @@ namespace Gallery.WEB.Controllers
                 PathImage = i.PathImage,
                 UserId = (int)i.UserId,
                 CountLikes = likeService.CountLikes(i.Id),
-                isLike = likeService.IsLike(i.Id, currentUser.Id)
+                isLike = likeService.IsLike(i.Id, currentUser.Id),
+                Comments = commentService.GetAllCommentsForImage(i.Id).ToList()
 
             }).ToList();
             ViewBag.MyFriendLogin = friend.Login;

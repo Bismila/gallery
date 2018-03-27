@@ -59,6 +59,7 @@ namespace Gallery.WEB.Controllers
             }
             return Json("", JsonRequestBehavior.AllowGet);
         }
+
         [HttpPost, ActionName("UpdateComment")]
         public JsonResult UpdateComment(CommentDTO updateComment)
         {
@@ -78,6 +79,11 @@ namespace Gallery.WEB.Controllers
 
         }
 
+        [HttpPost, ActionName("AnswerToComment")]
+        public JsonResult AnswerToComment()
+        {
+            return Json("Oops... something went wrong.", JsonRequestBehavior.AllowGet);
+        }
 
     }
 }

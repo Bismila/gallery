@@ -147,6 +147,7 @@
                                                         {
                                                             <div class="delEditCommBlock">
                                                                 <a href="#" class="link-delComment" title="сomplain">
+                                                                    <span class="commentId hidden">@item.Comments[i].Id</span>
                                                                     <span class="delComment">
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </span>
@@ -194,6 +195,7 @@
 
                                     </div>
                                 </div>
+
                                 <div class="imgs-blockImg">
                                     @*<img src=" @Html.DisplayFor(modelItem => item.PathImage)" />*@
                                     <img src='@Url.Content(item.PathImage)' />
@@ -255,9 +257,9 @@
 
         clickLikeForCurrentUserPage(slider, countSlides);
 
+
         $('.new-comment .add-commentBtns__add').click(function (e) {
             e.preventDefault();
-
             var nowDate = $(this).parents('.new-comment').find(".add-comment__dateNow").text();
             var d = Date.now;
             var valId = ($(this).parent().siblings().text());
@@ -473,6 +475,12 @@
             currTxt = "";
 
 
+        });
+
+        $("body").on("click", ".comments-block__ansLink", function (e) {
+            var whom = $(this).parents(".comments-block").find(".comments-block__nameUser");
+            var who = @Html.Raw(Json.Encode(this.ViewBag.UserLogin));
+            alert("answer" + "кому " + whom.text() + "; кто " + who);
         });
 
 

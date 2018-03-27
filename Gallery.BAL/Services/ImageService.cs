@@ -51,7 +51,7 @@ namespace Gallery.BAL.Services
                 ImageDate = element.ImageDate,
                 PathImage = element.PathImage,
                 UserId = currentUser.Id,
-
+                
             };
             imageRepository.Create(elementNew);
         }
@@ -78,7 +78,19 @@ namespace Gallery.BAL.Services
                 PathImage = image.PathImage,
                 UserId = image.UserId,
                 CountLikes = likeRepository.CountLikes(image.Id),
-                isLike = likeRepository.IsLikeThisPhoto(image.Id, image.UserId)
+                isLike = likeRepository.IsLikeThisPhoto(image.Id, image.UserId),
+                Comments = commentRepository.GetAllCommentsForImage(image.Id).Select(x => new CommentDTO
+                {
+                    Id = x.Id,
+                    CommentData = x.CommentData,
+                    ImageId = x.ImageId,
+                    //IsEditComment = x.
+                    ParentId = x.ParentId,
+                    Text = x.Text,
+                    UserId = x.UserId,
+                    //UserLogin = userRepository.Get((long)x.UserId)
+                    //UserPhoto = x.
+                }).ToList()
             };
         }
         public CreateUpdateDto Get(long id, long currentUserId)
@@ -92,7 +104,18 @@ namespace Gallery.BAL.Services
                 PathImage = image.PathImage,
                 UserId = image.UserId,
                 CountLikes = likeRepository.CountLikes(image.Id),
-                isLike = likeRepository.IsLikeThisPhoto(image.Id, currentUserId)
+                isLike = likeRepository.IsLikeThisPhoto(image.Id, currentUserId),
+                Comments = commentRepository.GetAllCommentsForImage(image.Id).Select(x => new CommentDTO() {
+                    Id = x.Id,
+                    //UserPhoto = x.
+                    //UserLogin = x.
+                    UserId = x.UserId,
+                    Text = x.Text,
+                    ParentId = x.ParentId,
+                    //IsEditComment = x.
+                    ImageId = x.ImageId,
+                    CommentData = x.CommentData
+                }).ToList()
             };
         }
         public CreateUpdateImageDto GetOneImage(long id)
@@ -107,7 +130,18 @@ namespace Gallery.BAL.Services
                 UserName = image.userName,
                 UserId = image.UserId,
                 CountLikes = likeRepository.CountLikes(image.Id),
-                isLike = likeRepository.IsLikeThisPhoto(image.Id, image.UserId)
+                isLike = likeRepository.IsLikeThisPhoto(image.Id, image.UserId),
+                Comments = commentRepository.GetAllCommentsForImage(image.Id).Select(x => new CommentDTO {
+                    Id = x.Id,
+                    CommentData = x.CommentData,
+                    ImageId = x.ImageId,
+                    //IsEditComment = x.
+                    ParentId = x.ParentId,
+                    Text = x.Text,
+                    UserId = x.UserId,
+                    //UserLogin = userRepository.Get((long)x.UserId)
+                    //UserPhoto = x.
+                }).ToList()
             };
             return imageForUpdate;
         }
@@ -123,8 +157,19 @@ namespace Gallery.BAL.Services
                 UserId = x.UserId,
                 User = x.User,
                 CountLikes = likeRepository.CountLikes(x.Id),
-                isLike = likeRepository.IsLikeThisPhoto(x.Id, x.UserId)
-
+                isLike = likeRepository.IsLikeThisPhoto(x.Id, x.UserId),
+                Comments = commentRepository.GetAllCommentsForImage(x.Id).Select(img => new CommentDTO
+                {
+                    Id = img.Id,
+                    CommentData = img.CommentData,
+                    ImageId = img.ImageId,
+                    //IsEditComment = x.
+                    ParentId = img.ParentId,
+                    Text = img.Text,
+                    UserId = img.UserId,
+                    //UserLogin = userRepository.Get((long)img.UserId.ToS)
+                    //UserPhoto = x.
+                }).ToList()
             });
             return images;
         }
@@ -150,6 +195,7 @@ namespace Gallery.BAL.Services
                 ImageDate = element.ImageDate,
                 PathImage = element.PathImage,
                 UserId = currentUser.Id,
+                
             };
             imageRepository.Update(updateImage);
         }
@@ -170,7 +216,19 @@ namespace Gallery.BAL.Services
                 UserId = x.UserId,
                 UserName = x.userName,
                 CountLikes = likeRepository.CountLikes(x.Id),
-                isLike = likeRepository.IsLikeThisPhoto(x.Id, userId)
+                isLike = likeRepository.IsLikeThisPhoto(x.Id, userId),
+                Comments = commentRepository.GetAllCommentsForImage(x.Id).Select(img => new CommentDTO
+                {
+                    Id = img.Id,
+                    CommentData = img.CommentData,
+                    ImageId = img.ImageId,
+                    //IsEditComment = x.
+                    ParentId = img.ParentId,
+                    Text = img.Text,
+                    UserId = img.UserId,
+                    //UserLogin = userRepository.Get((long)x.UserId)
+                    //UserPhoto = x.
+                }).ToList()
             });
             return images;
         }
@@ -198,7 +256,8 @@ namespace Gallery.BAL.Services
                     Text = comm.Text,
                     UserId = comm.UserId,
                     UserLogin = currentUser.Login,
-                    UserPhoto = currentUser.PhotoUser
+                    UserPhoto = currentUser.PhotoUser,
+
                 }).ToList()
 
             });

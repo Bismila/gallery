@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gallery.DAL.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Gallery.BAL.DTO.ImagesDto

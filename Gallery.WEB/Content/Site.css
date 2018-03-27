@@ -548,14 +548,12 @@ a.bx-next {
     .bx-wrapper img {
         margin: 0 auto !important;
         max-height: 500px !important;
-        /*height: 100vh;*/
         width: auto;
     }
 .imgs-slide__img {
     max-height: 500px !important;
     overflow: hidden;
     position: relative;
-    /*max-width: 100%;*/
     width: 100%;
     height: 500px;
 }
